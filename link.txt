@@ -1,0 +1,23 @@
+
+npm run android
+
+npm install hammerjs --save
+
+https://medium.com/@appstud/add-a-splash-screen-to-a-react-native-app-810492e773f9
+https://medium.com/handlebar-labs/how-to-add-a-splash-screen-to-a-react-native-app-ios-and-android-30a3cec835ae
+
+npm i react-native-splash-screen
+
+// https://reactnavigation.org/docs/en/getting-started.html
+// https://facebook.github.io/react-native/docs/0.60/navigation
+
+npm install react-native-reanimated react-native-gesture-handler react-native-screens 
+npm install react-native-safe-area-context @react-native-community/masked-view
+
+npm i react-navigation react-navigation-stack
+
+https://reactnative.dev/docs/flexbox
+
+https://www.tutorialspoint.com/react_native/react_native_scrollview.htm
+
+https://reactnative.dev/docs/colors
