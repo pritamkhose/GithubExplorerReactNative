@@ -1,5 +1,5 @@
 # Github Explorer React Native
- Github Explorer React Native App using Github Rest API web services
+Github Explorer React Native App using Github Rest API web services
 
 Introduction
 ------------
