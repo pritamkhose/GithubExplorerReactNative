@@ -1,5 +1,7 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://github.com/realabbas/Github-Actions-React-Native
+# https://blog.usejournal.com/automate-react-native-builds-with-github-actions-af54212d26dc
+# https://blog.logrocket.com/react-native-ci-cd-using-github-actions/
 
 name: react-native-android-build-apk
 
@@ -27,9 +29,9 @@ jobs:
           npm install
       - name: Build Android Release
         run: |
-          cd android && ./gradlew assemble
+          cd android && chmod +x ./gradlew assemble
       - name: Upload Artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: app-release.apk
           path: android/app/build/outputs/apk/
