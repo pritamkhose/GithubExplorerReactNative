@@ -1,83 +1,59 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
   ScrollView,
   RefreshControl,
   View,
   Text,
-  TextInput,
-  FlatList,
-  StatusBar,
-  ActivityIndicator,
-  Card,
-  Button,
   Image,
-  Icon,
   Alert,
   TouchableOpacity,
 } from 'react-native';
 import {BASE_URL, APP_COLOR} from './Constants';
 
 export default class UserDetails extends React.Component {
-  static navigationOptions = {
-    title: 'Github User Details',
-    headerStyle: {
-      backgroundColor: APP_COLOR,
-    },
-    headerTintColor: '#FFFFFF',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
-  };
-
   constructor(props) {
     super(props);
     this.state = {
-      username: this.props.navigation.getParam('username', ''),
-      avatar_url: this.props.navigation.getParam('avatar_url', null),
-      isLoading: false,
+      username: props.route.params.username,
+      avatar_url: props.route.params.avatar_url,
+      isLoading: true,
+      errorMsg: '',
       aObj: {},
     };
+  }
+
+  componentDidMount() {
     this.getData();
   }
 
-  onSelect = data => {
-    this.state = {
-      username: this.props.navigation.getParam('username', ''),
-      isLoading: false,
-      aObj: {},
-    };
-    this.getData();
-  };
+  componentDidUpdate() {
+    if (this.props.route.params.username !== this.state.username) {
+      this.setState(
+        {
+          username: this.props.route.params.username,
+          avatar_url: this.props.route.params.avatar_url,
+        },
+        () => {
+          console.log(this.state.username, this.state.avatar_url);
+          this.getData();
+        },
+      );
+    }
+  }
 
   render() {
-    const {navigate} = this.props.navigation;
-
     return (
-      <>
-        <StatusBar barStyle="dark-content" backgroundColor="#1970B6" />
-        <View style={styles.container}>
-          {this.state && !this.state.aObj ? (
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              {this.state.isLoading ? (
-                <Text>Nothing Found</Text>
-              ) : (
-                <Text>Loading ...</Text>
-              )}
-            </View>
-          ) : (
-            this.showData(navigate)
-          )}
-        </View>
-      </>
+      <View style={styles.container}>
+        {this.state.isLoading ? (
+          <Text>Loading ...</Text>
+        ) : this.state && !this.state.aObj ? (
+          <Text>{this.state.errorMsg}</Text>
+        ) : (
+          this.showData()
+        )}
+      </View>
     );
   }
 
@@ -85,7 +61,7 @@ export default class UserDetails extends React.Component {
     this.getData();
   };
 
-  showData(navigate) {
+  showData() {
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -105,7 +81,9 @@ export default class UserDetails extends React.Component {
               />
               <View style={styles.cardData}>
                 <Text style={styles.textblue}>{this.state.aObj.name}</Text>
-                <Text style={styles.textblack}>{this.state.aObj.bio}</Text>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={styles.textblack}>{this.state.aObj.bio}</Text>
+                </View>
                 <Text style={styles.textblack}>{this.state.aObj.location}</Text>
               </View>
             </View>
@@ -148,7 +126,7 @@ export default class UserDetails extends React.Component {
           </View>
           <View style={{flexDirection: 'row'}}>
             <TouchableOpacity
-              onPress={() => this.openDetails(navigate, 'f')}
+              onPress={() => this.openDetails('f', this.state.aObj.followers)}
               style={styles.carditem}>
               <Text style={styles.textCount}>{this.state.aObj.followers}</Text>
               <View style={styles.imgtxt}>
@@ -160,7 +138,7 @@ export default class UserDetails extends React.Component {
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this.openDetails(navigate, 'o')}
+              onPress={() => this.openDetails('o', this.state.aObj.following)}
               style={styles.carditem}>
               <Text style={styles.textCount}>{this.state.aObj.following}</Text>
               <View style={styles.imgtxt}>
@@ -186,7 +164,9 @@ export default class UserDetails extends React.Component {
               </View>
             </View>
             <TouchableOpacity
-              onPress={() => this.openDetails(navigate, 'r')}
+              onPress={() =>
+                this.openDetails('r', this.state.aObj.public_repos)
+              }
               style={styles.carditem2}>
               <Text style={styles.textCount}>
                 {this.state.aObj.public_repos}
@@ -205,36 +185,41 @@ export default class UserDetails extends React.Component {
     );
   }
 
-  openDetails(navigate, screen) {
-    if (screen === 'r') {
-      this.props.navigation.navigate('RepoScreen', {
-        username: this.state.username,
-      });
-    } else if (screen === 'f') {
-      this.props.navigation.navigate('FollowerScreen', {
-        username: this.state.username,
-      });
-    } else if (screen === 'o') {
-      this.props.navigation.navigate('FollowingScreen', {
-        username: this.state.username,
-      });
+  openDetails(screen, count) {
+    if (count != 0) {
+      if (screen === 'r') {
+        this.props.navigation.navigate('RepoScreen', {
+          username: this.state.username,
+        });
+      } else if (screen === 'f') {
+        this.props.navigation.navigate('FollowerScreen', {
+          username: this.state.username,
+        });
+      } else if (screen === 'o') {
+        this.props.navigation.navigate('FollowingScreen', {
+          username: this.state.username,
+        });
+      }
     }
   }
 
   getData() {
     var baseURL = BASE_URL + 'users/' + this.state.username;
-    this.setState({
-      isLoading: true,
-    });
     try {
-      const response = fetch(baseURL, {
+      fetch(baseURL, {
         method: 'GET',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
       })
-        .then(response => response.json())
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            return null;
+          }
+        })
         .then(responseJson => {
           if (responseJson) {
             this.setState({
@@ -255,7 +240,6 @@ export default class UserDetails extends React.Component {
                 {
                   text: 'Retry',
                   onPress: () => {
-                    console.log('Ask me later pressed');
                     this.getData();
                   },
                 },
@@ -273,8 +257,11 @@ export default class UserDetails extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    padding: 4,
     flexDirection: 'column',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   item: {
     padding: 10,
@@ -306,6 +293,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 14,
     padding: 5,
+    flex: 1,
   },
   textblue: {
     color: APP_COLOR,

@@ -6,50 +6,49 @@ import {
   RefreshControl,
   View,
   Text,
-  StatusBar,
   Image,
   Alert,
   TouchableOpacity,
 } from 'react-native';
-import {BASE_URL, APP_COLOR} from './Constants';
+import {BASE_URL} from './Constants';
 
 export default class FollowerScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Followers',
-    headerStyle: {
-      backgroundColor: APP_COLOR,
-    },
-    headerTintColor: '#FFFFFF',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
-  };
-
   constructor(props) {
     super(props);
     this.state = {
-      username: props.navigation.getParam('username', ''),
-      isLoading: false,
+      username: props.route.params.username,
+      isLoading: true,
+      errorMsg: '',
       aList: [],
     };
+  }
+
+  componentDidMount() {
     this.getData();
   }
 
   getData() {
     var baseURL =
       BASE_URL + 'users/' + this.state.username + '/followers?per_page=100';
-    this.setState({
-      isLoading: true,
-    });
     try {
-      const response = fetch(baseURL, {
+      fetch(baseURL, {
         method: 'GET',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
       })
-        .then(response => response.json())
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            this.showAlertRetry(
+              'Error - ' + response.status,
+              JSON.stringify(response),
+            );
+            return null;
+          }
+        })
         .then(responseJson => {
           if (responseJson && responseJson.length !== 0) {
             this.setState({
@@ -57,42 +56,40 @@ export default class FollowerScreen extends React.Component {
               aList: responseJson,
             });
           } else {
-            this.setState({isLoading: false, aList: []});
-            Alert.alert(
-              'Error - ' + response.status,
-              JSON.stringify(responseJson),
-              [
-                {
-                  text: 'Cancel',
-                  onPress: () => console.log('Cancel Pressed'),
-                  style: 'cancel',
-                },
-                {
-                  text: 'Retry',
-                  onPress: () => {
-                    console.log('Ask me later pressed');
-                    this.getData();
-                  },
-                },
-              ],
-              {cancelable: false},
-            );
+            this.setState({
+              isLoading: false,
+              aList: [],
+              errorMsg: 'Nothing Found',
+            });
           }
-        });
+        })
+        .catch(networkError =>
+          this.setState({
+            isLoading: false,
+            aList: [],
+            errorMsg: 'Something is wrong with the server!',
+          }),
+        );
     } catch (e) {
       this.setState({loading: false});
     }
   }
 
-  showAlert(msg) {
+  showAlertRetry(title, msg) {
     Alert.alert(
-      null,
+      title,
       msg,
       [
         {
           text: 'Cancel',
-          onPress: () => '',
+          onPress: () => console.log('Cancel Pressed'),
           style: 'cancel',
+        },
+        {
+          text: 'Retry',
+          onPress: () => {
+            this.getData();
+          },
         },
       ],
       {cancelable: false},
@@ -100,47 +97,28 @@ export default class FollowerScreen extends React.Component {
   }
 
   render() {
-    const {navigate} = this.props.navigation;
-
     return (
-      <>
-        <StatusBar barStyle="dark-content" backgroundColor="#1970B6" />
-        <View style={styles.container}>
-          {this.state.aList < 1 ? (
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              {this.state.isLoading ? (
-                <Text>Nothing Found</Text>
-              ) : (
-                <Text>Loading ...</Text>
-              )}
-            </View>
-          ) : (
-            this.showList(navigate)
-          )}
-        </View>
-      </>
+      <View style={styles.container}>
+        {this.state.isLoading ? (
+          <Text>Loading ...</Text>
+        ) : this.state.aList == 0 ? (
+          <Text>{this.state.errorMsg}</Text>
+        ) : (
+          this.showList()
+        )}
+      </View>
     );
   }
 
-  openDetails(navigate, txt) {
-    console.log(txt);
-    this.props.navigation.navigate('UserDetails', {username: txt});
-    // const {navigation} = this.props;
-    // navigation.navigate({username: txt});
-    // navigation.goBack();
+  openDetails(txt, url) {
+    this.props.navigation.navigate('UserDetails', {username: txt, avatar_url: url});
   }
 
   _onRefresh = () => {
     this.getData();
   };
 
-  showList(navigate) {
+  showList() {
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -153,7 +131,7 @@ export default class FollowerScreen extends React.Component {
         {this.state.aList.map((item, index) => (
           <TouchableOpacity
             key={index}
-            onPress={() => this.openDetails(navigate, item.login)}>
+            onPress={() => this.openDetails(item.login, item.avatar_url)}>
             <View style={styles.carditem}>
               <Image
                 style={{width: 50, height: 50}}
@@ -174,8 +152,11 @@ export default class FollowerScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    padding: 4,
     flexDirection: 'column',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   text: {
     color: 'white',

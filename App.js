@@ -8,27 +8,20 @@
 
 import React, {Fragment, useEffect} from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
   StatusBar,
+  useColorScheme,
   Platform,
+  TouchableOpacity,
+  Image,
+  Alert,
+  BackHandler,
 } from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 import SplashScreen from 'react-native-splash-screen';
-
-import {createAppContainer} from 'react-navigation';
-import {createStackNavigator} from 'react-navigation-stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import 'react-native-gesture-handler';
 
 import HomeScreen from './components/HomeScreen';
@@ -37,37 +30,104 @@ import RepoScreen from './components/RepoScreen';
 import FollowerScreen from './components/FollowerScreen';
 import FollowingScreen from './components/FollowingScreen';
 
-const AppNavigator = createStackNavigator(
-  {
-    Home: {screen: HomeScreen},
-    UserDetails: {screen: UserDetails},
-    RepoScreen: {screen: RepoScreen},
-    FollowerScreen: {screen: FollowerScreen},
-    FollowingScreen: {screen: FollowingScreen},
-    // Login: {
-    // screen: LoginScreen,
-    // navigationOptions: {
-    // header: null
-    // },
-  },
-  {
-    initialRouteName: 'Home',
-  },
-);
-
-const AppContainer = createAppContainer(AppNavigator);
+const Stack = createStackNavigator();
+const APP_COLOR = '#2196F3'; // import {APP_COLOR} from './Constants';
 
 const App = () => {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  const backgroundStyle = {
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  };
+
   useEffect(() => {
     SplashScreen.hide();
-  }, []);
+    StatusBar.setBackgroundColor(APP_COLOR);
+    return () => backHandler.remove();
+  });
+
   //or <StatusBar barStyle="dark-content" />
   return (
     <Fragment>
       {Platform.OS === 'ios' && <StatusBar barStyle="light-content" />}
-      <AppContainer />
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Home"
+          headerMode="screen"
+          screenOptions={{
+            headerTintColor: 'white',
+            headerStyle: {
+              backgroundColor: APP_COLOR,
+            },
+            headerTintColor: '#FFFFFF',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => {
+                  Alert.alert(null, 'Do you want to exit?', [
+                    {
+                      text: 'Cancel',
+                      onPress: () => console.log('Cancel Pressed'),
+                      style: 'cancel',
+                    },
+                    {text: 'OK', onPress: () => doExit()},
+                  ]);
+                }}>
+                <Image
+                  onPress={() => console.log('This is a button!')}
+                  style={{width: 24, height: 24, marginRight: 10}}
+                  source={require('./assets/images/logout.png')}
+                  tintColor="white"
+                />
+              </TouchableOpacity>
+            ),
+          }}>
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{
+              title: 'Github Explorer',
+            }}
+          />
+          <Stack.Screen
+            name="UserDetails"
+            component={UserDetails}
+            options={{
+              title: 'Github User Details',
+            }}
+          />
+          <Stack.Screen
+            name="RepoScreen"
+            component={RepoScreen}
+            options={{
+              title: 'Repositories',
+            }}
+          />
+          <Stack.Screen
+            name="FollowerScreen"
+            component={FollowerScreen}
+            options={{
+              title: 'Followers',
+            }}
+          />
+          <Stack.Screen
+            name="FollowingScreen"
+            component={FollowingScreen}
+            options={{
+              title: 'Following',
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </Fragment>
   );
+};
+
+const doExit = () => {
+  BackHandler.exitApp();
+  return true;
 };
 
 export default App;

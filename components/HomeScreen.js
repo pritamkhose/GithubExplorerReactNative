@@ -1,83 +1,34 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {Component, BackHandler} from 'react';
+import React from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
   ScrollView,
   RefreshControl,
   View,
   Text,
   TextInput,
-  FlatList,
-  StatusBar,
-  ActivityIndicator,
-  Card,
-  Button,
   Image,
-  Icon,
   Alert,
   TouchableOpacity,
   Keyboard,
 } from 'react-native';
 
-import {BASE_URL, APP_COLOR} from './Constants';
+import {BASE_URL} from './Constants';
 
 export default class HomeScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Github Explorer',
-    headerStyle: {
-      backgroundColor: APP_COLOR,
-    },
-    headerTintColor: '#FFFFFF',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
-    headerRight: () => (
-      <TouchableOpacity
-        onPress={() => {
-          console.log('exit');
-        }}>
-        <Image
-          style={styles.iconHeader}
-          source={require('../assets/images/exit.svg')}
-        />
-      </TouchableOpacity>
-    ),
-  };
-
-  // this.doExit()
-
   constructor(props) {
     super(props);
     this.state = {
       serachTxt: 'android',
-      isLoading: false,
+      isLoading: true,
+      errorMsg: '',
       aList: [],
     };
+  }
+
+  componentDidMount() {
     this.getData();
   }
-
-  doExit() {
-    BackHandler.exitApp();
-    return true;
-  }
-
-  backPressed = () => {
-    Alert.alert(
-      'Exit App',
-      'Do you want to exit?',
-      [
-        {
-          text: 'No',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {text: 'Yes', onPress: () => BackHandler.exitApp()},
-      ],
-      {cancelable: false},
-    );
-    return true;
-  };
 
   getSearch() {
     // Hide that keyboard!
@@ -92,19 +43,26 @@ export default class HomeScreen extends React.Component {
 
   getData() {
     var baseURL =
-      BASE_URL + 'search/users?q=' + this.state.serachTxt + '&page=1';
-    this.setState({
-      isLoading: true,
-    });
+      BASE_URL + 'search/users?q=' + this.state.serachTxt + '&page=1'; // &per_page=100
     try {
-      const response = fetch(baseURL, {
+      fetch(baseURL, {
         method: 'GET',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
       })
-        .then(response => response.json())
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            this.showAlertRetry(
+              'Error - ' + response.status,
+              JSON.stringify(response),
+            );
+            return null;
+          }
+        })
         .then(responseJson => {
           if (responseJson && responseJson.total_count !== 0) {
             this.setState({
@@ -112,28 +70,20 @@ export default class HomeScreen extends React.Component {
               aList: responseJson.items,
             });
           } else {
-            this.setState({isLoading: false, aList: []});
-            Alert.alert(
-              'Error - ' + response.status,
-              JSON.stringify(responseJson),
-              [
-                {
-                  text: 'Cancel',
-                  onPress: () => console.log('Cancel Pressed'),
-                  style: 'cancel',
-                },
-                {
-                  text: 'Retry',
-                  onPress: () => {
-                    console.log('Ask me later pressed');
-                    this.getData();
-                  },
-                },
-              ],
-              {cancelable: false},
-            );
+            this.setState({
+              isLoading: false,
+              aList: [],
+              errorMsg: 'Nothing Found',
+            });
           }
-        });
+        })
+        .catch(networkError =>
+          this.setState({
+            isLoading: false,
+            aList: [],
+            errorMsg: 'Something is wrong with the server!',
+          }),
+        );
     } catch (e) {
       this.setState({loading: false});
     }
@@ -154,25 +104,38 @@ export default class HomeScreen extends React.Component {
     );
   }
 
-  render() {
-    const {navigate} = this.props.navigation;
+  showAlertRetry(title, msg) {
+    Alert.alert(
+      title,
+      msg,
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Retry',
+          onPress: () => {
+            this.getData();
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  }
 
+  render() {
     return (
       <>
-        <StatusBar barStyle="dark-content" backgroundColor="#1970B6" />
+        {/* <StatusBar barStyle="dark-content" backgroundColor="#1970B6" /> */}
         <View style={styles.container}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'stretch',
-            }}>
+          <View style={styles.searchrow}>
             <TextInput
               style={styles.textInput}
               placeholder="Please Enter some text for Serarch"
               underlineColorAndroid="transparent"
               onChangeText={text => this.setState({serachTxt: text})}
-              value={this.state.text}
-              returnKeyType="down"
               onSubmitEditing={this.SubmitEdit}
             />
             <TouchableOpacity onPress={() => this.getSearch()}>
@@ -182,25 +145,15 @@ export default class HomeScreen extends React.Component {
               />
             </TouchableOpacity>
           </View>
-          <>
-            {this.state.aList < 1 ? (
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                {this.state.isLoading ? (
-                  <Text>Nothing Found</Text>
-                ) : (
-                  <Text>Loading ...</Text>
-                )}
-              </View>
+          <View style={styles.center}>
+            {this.state.isLoading ? (
+              <Text>Loading ...</Text>
+            ) : this.state.aList == 0 ? (
+              <Text>{this.state.errorMsg}</Text>
             ) : (
-              this.showList(navigate)
+              this.showList()
             )}
-          </>
+          </View>
         </View>
       </>
     );
@@ -210,7 +163,7 @@ export default class HomeScreen extends React.Component {
     this.getData();
   };
 
-  openDetails(navigate, txt, avatar_url) {
+  openDetails(txt, avatar_url) {
     console.log(txt);
     this.props.navigation.navigate('UserDetails', {
       username: txt,
@@ -222,7 +175,7 @@ export default class HomeScreen extends React.Component {
     this.getData();
   };
 
-  showList(navigate) {
+  showList() {
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -236,7 +189,7 @@ export default class HomeScreen extends React.Component {
           <TouchableOpacity
             key={index}
             onPress={() =>
-              this.openDetails(navigate, item.login, item.avatar_url)
+              this.openDetails(item.login, item.avatar_url)
             }>
             <View style={styles.carditem}>
               <Image
@@ -255,18 +208,21 @@ export default class HomeScreen extends React.Component {
   }
 }
 
-//  <FlatList
-// data={this.state.aList}
-// renderItem={({item}) => (
-//   <Text style={styles.item}>{item.login}</Text>
-// )}
-// />
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
     flexDirection: 'column',
+  },
+  center: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  searchrow: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
   },
   text: {
     color: 'white',
