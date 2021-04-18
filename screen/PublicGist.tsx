@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
   StyleSheet,
@@ -11,10 +10,13 @@ import {
   TouchableOpacity,
   Linking,
 } from 'react-native';
-import {BASE_URL, APP_COLOR} from './Constants';
 
-export default class RepoScreen extends React.Component {
-  constructor(props) {
+import {BASE_URL, APP_COLOR} from '../components/Constants';
+import {Props, StateList, GistItem} from '../model/models';
+import Loading from '../components/Loading';
+
+class PublicGist extends React.Component<Props, StateList> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       username: props.route.params.username,
@@ -33,7 +35,7 @@ export default class RepoScreen extends React.Component {
       BASE_URL +
       'users/' +
       this.state.username +
-      '/repos?per_page=100&sort=updated';
+      '/gists?per_page=100&sort=updated';
     try {
       fetch(baseURL, {
         method: 'GET',
@@ -75,11 +77,11 @@ export default class RepoScreen extends React.Component {
           }),
         );
     } catch (e) {
-      this.setState({loading: false});
+      this.setState({isLoading: false});
     }
   }
 
-  showAlertRetry(title, msg) {
+  showAlertRetry(title: string, msg: string) {
     Alert.alert(
       title,
       msg,
@@ -104,7 +106,7 @@ export default class RepoScreen extends React.Component {
     return (
       <View style={styles.container}>
         {this.state.isLoading ? (
-          <Text>Loading ...</Text>
+          <Loading />
         ) : this.state.aList == 0 ? (
           <Text>{this.state.errorMsg}</Text>
         ) : (
@@ -114,7 +116,7 @@ export default class RepoScreen extends React.Component {
     );
   }
 
-  openDetails(txt) {
+  openDetails(txt: string) {
     console.log(txt);
     Linking.openURL(txt);
   }
@@ -133,17 +135,17 @@ export default class RepoScreen extends React.Component {
             onRefresh={this._onRefresh}
           />
         }>
-        {this.state.aList.map((item, index) => (
+        {this.state.aList.map((item: GistItem, index: number) => (
           <TouchableOpacity
             key={index}
             onPress={() => this.openDetails(item.html_url)}>
             <View style={styles.carditem}>
               <Text style={{paddingBottom: 5, color: APP_COLOR, fontSize: 20}}>
-                {item.name}
+                {item.description}
               </Text>
               {item.description && item.description.length > 1 ? (
                 <Text style={{paddingBottom: 5, color: 'black', fontSize: 14}}>
-                  {item.description}
+                  Last updated at : {item.updated_at}
                 </Text>
               ) : null}
               <View
@@ -152,29 +154,6 @@ export default class RepoScreen extends React.Component {
                   justifyContent: 'space-between',
                   alignItems: 'stretch',
                 }}>
-                <Text
-                  style={{paddingBottom: 5, color: APP_COLOR, fontSize: 14}}>
-                  {item.language}
-                </Text>
-                <View style={{flexDirection: 'row'}}>
-                  <Image
-                    style={{width: 20, height: 20}}
-                    source={require('../assets/images/star80.png')}
-                  />
-                  <Text style={styles.textblack}>
-                    {item.stargazers_count}{'  '}
-                  </Text>
-                  <Image
-                    style={{width: 20, height: 20}}
-                    source={require('../assets/images/clock80.png')}
-                  />
-                  <Text style={styles.textblack}> {item.watchers_count}  </Text>
-                  <Image
-                    style={{width: 20, height: 20}}
-                    source={require('../assets/images/codefork96.png')}
-                  />
-                  <Text style={styles.textblack}> {item.forks}</Text>
-                </View>
               </View>
             </View>
           </TouchableOpacity>
@@ -188,40 +167,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 4,
-    flexDirection: 'column',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  text: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '700',
-  },
-  textInput: {
-    height: 40,
-    fontSize: 18,
-    borderWidth: 0.5,
-    padding: 10,
+  textblack: {
+    color: 'black',
+    fontSize: 14,
+    paddingLeft: 4,
   },
   iconImg: {
-    width: 50,
-    height: 50,
-    marginTop: -5,
-  },
-  item: {
-    padding: 10,
-    fontSize: 18,
-    height: 44,
+    marginLeft: 10,
+    width: 20,
+    height: 20,
   },
   carditem: {
     margin: 5,
     padding: 10,
     backgroundColor: 'white',
     borderRadius: 5,
-  },
-  cardData: {
-    flexDirection: 'column',
-    padding: 5,
-  },
+  }
 });
+
+export default PublicGist;

@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
   StyleSheet,
@@ -10,17 +9,20 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
-import {BASE_URL, APP_COLOR} from './Constants';
 
-export default class UserDetails extends React.Component {
-  constructor(props) {
+import {BASE_URL, APP_COLOR} from '../components/Constants';
+import {Props, StateObj} from '../model/models';
+import Loading from '../components/Loading';
+
+class UserDetails extends React.Component<Props, StateObj> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       username: props.route.params.username,
       avatar_url: props.route.params.avatar_url,
       isLoading: true,
       errorMsg: '',
-      aObj: {},
+      aObj: null,
     };
   }
 
@@ -47,7 +49,7 @@ export default class UserDetails extends React.Component {
     return (
       <View style={styles.container}>
         {this.state.isLoading ? (
-          <Text>Loading ...</Text>
+          <Loading />
         ) : this.state && !this.state.aObj ? (
           <Text>{this.state.errorMsg}</Text>
         ) : (
@@ -77,17 +79,26 @@ export default class UserDetails extends React.Component {
               <Image
                 style={{width: 120, height: 120}}
                 source={{uri: this.state.avatar_url}}
-                alt={require('../assets/images/no_image_placeholder.png')}
+                onError={() =>
+                  require('../assets/images/no_image_placeholder.png')
+                }
               />
-              <View style={styles.cardData}>
-                <Text style={styles.textblue}>{this.state.aObj.name}</Text>
+              <View
+                style={
+                  this.state.aObj?.name == null
+                    ? styles.cardDataMinHight
+                    : styles.cardData
+                }>
+                <Text style={styles.textblue}>{this.state.aObj?.name}</Text>
                 <View style={{flexDirection: 'row'}}>
-                  <Text style={styles.textblack}>{this.state.aObj.bio}</Text>
+                  <Text style={styles.textblack}>{this.state.aObj?.bio}</Text>
                 </View>
-                <Text style={styles.textblack}>{this.state.aObj.location}</Text>
+                <Text style={styles.textblack}>
+                  {this.state.aObj?.location}
+                </Text>
               </View>
             </View>
-            {this.state && this.state.aObj.email != null ? (
+            {this.state && this.state.aObj?.email != null ? (
               <View style={styles.rowData}>
                 <Image
                   style={styles.iconSize}
@@ -96,7 +107,7 @@ export default class UserDetails extends React.Component {
                 <Text style={styles.textblack}>{this.state.aObj.email}</Text>
               </View>
             ) : null}
-            {this.state && this.state.aObj.blog ? (
+            {this.state && this.state.aObj?.blog ? (
               <View style={styles.rowData}>
                 <Image
                   style={styles.iconSize}
@@ -111,7 +122,7 @@ export default class UserDetails extends React.Component {
                 source={require('../assets/images/create80.png')}
               />
               <Text style={styles.textblack}>
-                Joined at : {this.state.aObj.created_at}
+                Joined at : {this.state.aObj?.created_at}
               </Text>
             </View>
             <View style={styles.rowData}>
@@ -120,15 +131,15 @@ export default class UserDetails extends React.Component {
                 source={require('../assets/images/clock80.png')}
               />
               <Text style={styles.textblack}>
-                Last updated at : {this.state.aObj.updated_at}
+                Last updated at : {this.state.aObj?.updated_at}
               </Text>
             </View>
           </View>
           <View style={{flexDirection: 'row'}}>
             <TouchableOpacity
-              onPress={() => this.openDetails('f', this.state.aObj.followers)}
+              onPress={() => this.openDetails('f', this.state.aObj?.followers)}
               style={styles.carditem}>
-              <Text style={styles.textCount}>{this.state.aObj.followers}</Text>
+              <Text style={styles.textCount}>{this.state.aObj?.followers}</Text>
               <View style={styles.imgtxt}>
                 <Image
                   style={styles.iconSize}
@@ -138,9 +149,9 @@ export default class UserDetails extends React.Component {
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this.openDetails('o', this.state.aObj.following)}
+              onPress={() => this.openDetails('o', this.state.aObj?.following)}
               style={styles.carditem}>
-              <Text style={styles.textCount}>{this.state.aObj.following}</Text>
+              <Text style={styles.textCount}>{this.state.aObj?.following}</Text>
               <View style={styles.imgtxt}>
                 <Image
                   style={styles.iconSize}
@@ -151,9 +162,13 @@ export default class UserDetails extends React.Component {
             </TouchableOpacity>
           </View>
           <View style={{flexDirection: 'row'}}>
-            <View style={styles.carditem}>
+            <TouchableOpacity
+              onPress={() =>
+                this.openDetails('g', this.state.aObj?.public_gists)
+              }
+              style={styles.carditem}>
               <Text style={styles.textCount}>
-                {this.state.aObj.public_gists}
+                {this.state.aObj?.public_gists}
               </Text>
               <View style={styles.imgtxt}>
                 <Image
@@ -162,14 +177,14 @@ export default class UserDetails extends React.Component {
                 />
                 <Text>Public Gists</Text>
               </View>
-            </View>
+            </TouchableOpacity>
             <TouchableOpacity
               onPress={() =>
-                this.openDetails('r', this.state.aObj.public_repos)
+                this.openDetails('r', this.state.aObj?.public_repos)
               }
-              style={styles.carditem2}>
+              style={styles.carditem}>
               <Text style={styles.textCount}>
-                {this.state.aObj.public_repos}
+                {this.state.aObj?.public_repos}
               </Text>
               <View style={styles.imgtxt}>
                 <Image
@@ -185,10 +200,14 @@ export default class UserDetails extends React.Component {
     );
   }
 
-  openDetails(screen, count) {
-    if (count != 0) {
+  openDetails(screen: string, count: any) {
+    if (count != null && count != 0) {
       if (screen === 'r') {
-        this.props.navigation.navigate('RepoScreen', {
+        this.props.navigation.navigate('RepositoriesScreen', {
+          username: this.state.username,
+        });
+      } else if (screen === 'g') {
+        this.props.navigation.navigate('PublicGistScreen', {
           username: this.state.username,
         });
       } else if (screen === 'f') {
@@ -217,20 +236,9 @@ export default class UserDetails extends React.Component {
           if (response.ok) {
             return response.json();
           } else {
-            return null;
-          }
-        })
-        .then(responseJson => {
-          if (responseJson) {
-            this.setState({
-              isLoading: false,
-              aObj: responseJson,
-            });
-          } else {
-            this.setState({isLoading: false, aObj: {}});
             Alert.alert(
               'Error - ' + response.status,
-              JSON.stringify(responseJson),
+              JSON.stringify(response),
               [
                 {
                   text: 'Cancel',
@@ -246,10 +254,21 @@ export default class UserDetails extends React.Component {
               ],
               {cancelable: false},
             );
+            return null;
+          }
+        })
+        .then(responseJson => {
+          if (responseJson) {
+            this.setState({
+              isLoading: false,
+              aObj: responseJson,
+            });
+          } else {
+            this.setState({isLoading: false, aObj: null});
           }
         });
     } catch (e) {
-      this.setState({loading: false});
+      this.setState({isLoading: false});
     }
   }
 }
@@ -258,57 +277,48 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 4,
-    flexDirection: 'column',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  item: {
-    padding: 10,
-    fontSize: 18,
-    height: 44,
-  },
   carditem: {
     flex: 1,
-    marginVertical: 5,
+    margin: 6,
     padding: 15,
-    marginRight: 5,
     backgroundColor: 'white',
-    borderRadius: 5,
-  },
-  carditem2: {
-    flex: 1,
-    marginVertical: 5,
-    padding: 15,
-    marginLeft: 5,
-    backgroundColor: 'white',
-    borderRadius: 5,
+    borderRadius: 8,
   },
   cardData: {
     flexDirection: 'column',
-    paddingVertical: 5,
+    paddingVertical: 4,
     paddingHorizontal: 20,
+  },
+  cardDataMinHight: {
+    flexDirection: 'column',
+    paddingVertical: 4,
+    paddingHorizontal: 20,
+    maxHeight: 60,
   },
   textblack: {
     color: 'black',
     fontSize: 14,
-    padding: 5,
+    padding: 4,
     flex: 1,
   },
   textblue: {
     color: APP_COLOR,
     fontSize: 20,
-    padding: 5,
+    padding: 4,
   },
   rowData: {
     flexDirection: 'row',
-    paddingBottom: 5,
+    paddingBottom: 4,
     alignItems: 'center',
   },
   iconSize: {
     width: 20,
     height: 20,
-    marginEnd: 5,
+    marginEnd: 4,
   },
   textCount: {
     fontSize: 20,
@@ -317,7 +327,9 @@ const styles = StyleSheet.create({
   imgtxt: {
     flex: 1,
     flexDirection: 'row',
-    paddingTop: 5,
+    paddingTop: 4,
     justifyContent: 'center',
   },
 });
+
+export default UserDetails;

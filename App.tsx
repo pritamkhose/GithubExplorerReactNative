@@ -2,48 +2,42 @@
  * Sample React Native App
  * https://github.com/facebook/react-native
  *
+ * Generated with the TypeScript template
+ * https://github.com/react-native-community/react-native-template-typescript
+ *
  * @format
- * @flow strict-local
  */
 
 import React, {Fragment, useEffect} from 'react';
 import {
-  StatusBar,
-  useColorScheme,
+  SafeAreaView,
   Platform,
   TouchableOpacity,
   Image,
   Alert,
   BackHandler,
+  StatusBar,
 } from 'react-native';
-
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 import SplashScreen from 'react-native-splash-screen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import 'react-native-gesture-handler';
 
-import HomeScreen from './components/HomeScreen';
-import UserDetails from './components/UserDetails';
-import RepoScreen from './components/RepoScreen';
-import FollowerScreen from './components/FollowerScreen';
-import FollowingScreen from './components/FollowingScreen';
+import HomeScreen from './screen/Home';
+import UserDetails from './screen/UserDetails';
+import FollowerScreen from './screen/Follower';
+import FollowingScreen from './screen/Following';
+import RepositoriesScreen from './screen/Repositories';
+import PublicGistScreen from './screen/PublicGist';
 
 const Stack = createStackNavigator();
-const APP_COLOR = '#2196F3'; // import {APP_COLOR} from './Constants';
+const APP_COLOR = '#2196F3'; // import {APP_COLOR} from './components/Constants';
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   useEffect(() => {
     SplashScreen.hide();
     StatusBar.setBackgroundColor(APP_COLOR);
-    return () => backHandler.remove();
   });
 
   //or <StatusBar barStyle="dark-content" />
@@ -55,18 +49,17 @@ const App = () => {
           initialRouteName="Home"
           headerMode="screen"
           screenOptions={{
-            headerTintColor: 'white',
+            headerTintColor: '#FFFFFFFF',
             headerStyle: {
               backgroundColor: APP_COLOR,
             },
-            headerTintColor: '#FFFFFF',
             headerTitleStyle: {
               fontWeight: 'bold',
             },
             headerRight: () => (
               <TouchableOpacity
                 onPress={() => {
-                  Alert.alert(null, 'Do you want to exit?', [
+                  Alert.alert('', 'Do you want to exit?', [
                     {
                       text: 'Cancel',
                       onPress: () => console.log('Cancel Pressed'),
@@ -76,10 +69,13 @@ const App = () => {
                   ]);
                 }}>
                 <Image
-                  onPress={() => console.log('This is a button!')}
-                  style={{width: 24, height: 24, marginRight: 10}}
+                  style={{
+                    width: 24,
+                    height: 24,
+                    marginRight: 10,
+                    tintColor: '#FFFFFFFF',
+                  }}
                   source={require('./assets/images/logout.png')}
-                  tintColor="white"
                 />
               </TouchableOpacity>
             ),
@@ -99,10 +95,17 @@ const App = () => {
             }}
           />
           <Stack.Screen
-            name="RepoScreen"
-            component={RepoScreen}
+            name="RepositoriesScreen"
+            component={RepositoriesScreen}
             options={{
               title: 'Repositories',
+            }}
+          />
+          <Stack.Screen
+            name="PublicGistScreen"
+            component={PublicGistScreen}
+            options={{
+              title: 'Public Gist',
             }}
           />
           <Stack.Screen

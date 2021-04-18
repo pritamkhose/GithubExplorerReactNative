@@ -1,11 +1,10 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
   StyleSheet,
+  Text,
+  View,
   ScrollView,
   RefreshControl,
-  View,
-  Text,
   TextInput,
   Image,
   Alert,
@@ -13,10 +12,27 @@ import {
   Keyboard,
 } from 'react-native';
 
-import {BASE_URL} from './Constants';
+import {BASE_URL} from '../components/Constants';
+import Loading from '../components/Loading';
 
-export default class HomeScreen extends React.Component {
-  constructor(props) {
+export interface Props {
+  navigation: any;
+}
+
+export interface State {
+  serachTxt: string;
+  isLoading: boolean;
+  errorMsg: string;
+  aList: [];
+}
+
+export interface UserItem {
+  login: string;
+  avatar_url: string;
+}
+
+export class HomeScreen extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       serachTxt: 'android',
@@ -85,13 +101,13 @@ export default class HomeScreen extends React.Component {
           }),
         );
     } catch (e) {
-      this.setState({loading: false});
+      this.setState({isLoading: false});
     }
   }
 
-  showAlert(msg) {
+  showAlert(msg: string) {
     Alert.alert(
-      null,
+      '',
       msg,
       [
         {
@@ -104,7 +120,7 @@ export default class HomeScreen extends React.Component {
     );
   }
 
-  showAlertRetry(title, msg) {
+  showAlertRetry(title: string, msg: string) {
     Alert.alert(
       title,
       msg,
@@ -140,15 +156,15 @@ export default class HomeScreen extends React.Component {
             />
             <TouchableOpacity onPress={() => this.getSearch()}>
               <Image
-                style={styles.iconImg}
+                style={styles.iconSearchImg}
                 source={require('../assets/images/search80.png')}
               />
             </TouchableOpacity>
           </View>
           <View style={styles.center}>
             {this.state.isLoading ? (
-              <Text>Loading ...</Text>
-            ) : this.state.aList == 0 ? (
+              <Loading />
+            ) : this.state.aList.length == 0 ? (
               <Text>{this.state.errorMsg}</Text>
             ) : (
               this.showList()
@@ -163,7 +179,7 @@ export default class HomeScreen extends React.Component {
     this.getData();
   };
 
-  openDetails(txt, avatar_url) {
+  openDetails(txt: string, avatar_url: string) {
     console.log(txt);
     this.props.navigation.navigate('UserDetails', {
       username: txt,
@@ -185,17 +201,17 @@ export default class HomeScreen extends React.Component {
             onRefresh={this._onRefresh}
           />
         }>
-        {this.state.aList.map((item, index) => (
+        {this.state.aList.map((item: UserItem, index) => (
           <TouchableOpacity
             key={index}
-            onPress={() =>
-              this.openDetails(item.login, item.avatar_url)
-            }>
+            onPress={() => this.openDetails(item.login, item.avatar_url)}>
             <View style={styles.carditem}>
               <Image
-                style={{width: 50, height: 50}}
+                style={styles.iconImg}
                 source={{uri: item.avatar_url}}
-                alt={require('../assets/images/no_image_placeholder.png')}
+                onError={() =>
+                  require('../assets/images/no_image_placeholder.png')
+                }
               />
               <Text style={{padding: 10, color: 'black', fontSize: 16}}>
                 {item.login}
@@ -224,11 +240,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'stretch',
   },
-  text: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '700',
-  },
   textInput: {
     flex: 1,
     height: 40,
@@ -236,15 +247,14 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     padding: 10,
   },
-  iconImg: {
+  iconSearchImg: {
     width: 50,
     height: 50,
     marginTop: -5,
   },
-  item: {
-    padding: 10,
-    fontSize: 18,
-    height: 44,
+  iconImg: {
+    width: 50,
+    height: 50,
   },
   carditem: {
     flexDirection: 'row',
@@ -253,8 +263,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 5,
   },
-  cardData: {
-    flexDirection: 'column',
-    padding: 5,
-  },
 });
+
+export default HomeScreen;
