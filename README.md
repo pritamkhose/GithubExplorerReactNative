@@ -23,6 +23,7 @@ Screenshots
 ![List of User Follower](screenshot/followers.png "List of User Follower")
 ![List of User Following](screenshot/following.png "List of User Following")
 ![List of User Repositories](screenshot/repo.png "List of User Repositories")
+![List of User Public Gist](screenshot/gist.png "List of User Public Gist")
 
 Libraries Used
 --------------
@@ -33,6 +34,8 @@ Libraries Used
 * [Scrollview](https://www.tutorialspoint.com/react_native/react_native_scrollview.htm)
 * [Splash-Screen](https://medium.com/@appstud/add-a-splash-screen-to-a-react-native-app-810492e773f9)
 * [FastImage caching](https://www.npmjs.com/package/react-native-fast-image)
+* [App Icon Generator iOS & Android](https://appicon.co/)
+* [Android Image Asset Studio](https://developer.android.com/studio/write/image-asset-studio)
 
 IDE setup
 ------------------------
