@@ -13,6 +13,7 @@ import {
 import {BASE_URL, APP_COLOR} from '../components/Constants';
 import {Props, StateObj} from '../model/models';
 import Loading from '../components/Loading';
+import FastImageLoad from '../components/FastImageLoad';
 
 class UserDetails extends React.Component<Props, StateObj> {
   constructor(props: Props) {
@@ -76,12 +77,9 @@ class UserDetails extends React.Component<Props, StateObj> {
         <>
           <View style={styles.carditem}>
             <View style={{flexDirection: 'row'}}>
-              <Image
-                style={{width: 120, height: 120}}
-                source={{uri: this.state.avatar_url}}
-                onError={() =>
-                  require('../assets/images/no_image_placeholder.png')
-                }
+              <FastImageLoad
+                style={styles.iconImg}
+                uri={this.state.avatar_url}
               />
               <View
                 style={
@@ -319,6 +317,10 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginEnd: 4,
+  },
+  iconImg: {
+    width: 120,
+    height: 120,
   },
   textCount: {
     fontSize: 20,

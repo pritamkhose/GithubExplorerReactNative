@@ -18,6 +18,11 @@ export interface Props {
   route: PropsRoutes;
 }
 
+export interface PropsImages {
+  style: any;
+  uri: string;
+}
+
 export interface PropsRoutes {
   params: UserItem;
 }

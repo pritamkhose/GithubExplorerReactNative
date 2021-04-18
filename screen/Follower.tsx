@@ -13,6 +13,7 @@ import {
 import {BASE_URL} from '../components/Constants';
 import {Props, StateList, UserLoginItem} from '../model/models';
 import Loading from '../components/Loading';
+import FastImageLoad from '../components/FastImageLoad';
 
 class Follower extends React.Component<Props, StateList> {
   constructor(props: Props) {
@@ -138,13 +139,7 @@ class Follower extends React.Component<Props, StateList> {
             key={index}
             onPress={() => this.openDetails(item.login, item.avatar_url)}>
             <View style={styles.carditem}>
-              <Image
-                style={styles.iconImg}
-                source={{uri: item.avatar_url}}
-                onError={() =>
-                  require('../assets/images/no_image_placeholder.png')
-                }
-              />
+              <FastImageLoad style={styles.iconImg} uri={item.avatar_url} />
               <Text style={styles.iconText}>{item.login}</Text>
             </View>
           </TouchableOpacity>

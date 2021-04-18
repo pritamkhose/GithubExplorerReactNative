@@ -32,6 +32,7 @@ Libraries Used
 * [Colors](https://reactnative.dev/docs/colors)
 * [Scrollview](https://www.tutorialspoint.com/react_native/react_native_scrollview.htm)
 * [Splash-Screen](https://medium.com/@appstud/add-a-splash-screen-to-a-react-native-app-810492e773f9)
+* [FastImage caching](https://www.npmjs.com/package/react-native-fast-image)
 
 IDE setup
 ------------------------

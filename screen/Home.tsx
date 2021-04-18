@@ -14,7 +14,7 @@ import {
 
 import {BASE_URL} from '../components/Constants';
 import Loading from '../components/Loading';
-
+import FastImageLoad from '../components/FastImageLoad';
 export interface Props {
   navigation: any;
 }
@@ -206,13 +206,7 @@ export class HomeScreen extends React.Component<Props, State> {
             key={index}
             onPress={() => this.openDetails(item.login, item.avatar_url)}>
             <View style={styles.carditem}>
-              <Image
-                style={styles.iconImg}
-                source={{uri: item.avatar_url}}
-                onError={() =>
-                  require('../assets/images/no_image_placeholder.png')
-                }
-              />
+              <FastImageLoad style={styles.iconImg} uri={item.avatar_url} />
               <Text style={{padding: 10, color: 'black', fontSize: 16}}>
                 {item.login}
               </Text>

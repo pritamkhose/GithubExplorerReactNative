@@ -40,7 +40,6 @@ const App = () => {
     StatusBar.setBackgroundColor(APP_COLOR);
   });
 
-  //or <StatusBar barStyle="dark-content" />
   return (
     <Fragment>
       {Platform.OS === 'ios' && <StatusBar barStyle="light-content" />}
