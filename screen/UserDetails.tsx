@@ -10,8 +10,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import {BASE_URL, APP_COLOR} from '../components/Constants';
-import {Props, StateObj} from '../model/models';
+import Constants from '../components/Constants';
+import { Props, StateObj } from '../model/models';
 import Loading from '../components/Loading';
 import FastImageLoad from '../components/FastImageLoad';
 
@@ -67,6 +67,7 @@ class UserDetails extends React.Component<Props, StateObj> {
   showData() {
     return (
       <ScrollView
+      contentContainerStyle={{flexGrow: 1}}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
@@ -76,7 +77,7 @@ class UserDetails extends React.Component<Props, StateObj> {
         }>
         <>
           <View style={styles.carditem}>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <FastImageLoad
                 style={styles.iconImg}
                 uri={this.state.avatar_url}
@@ -88,7 +89,7 @@ class UserDetails extends React.Component<Props, StateObj> {
                     : styles.cardData
                 }>
                 <Text style={styles.textblue}>{this.state.aObj?.name}</Text>
-                <View style={{flexDirection: 'row'}}>
+                <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.textblack}>{this.state.aObj?.bio}</Text>
                 </View>
                 <Text style={styles.textblack}>
@@ -133,7 +134,7 @@ class UserDetails extends React.Component<Props, StateObj> {
               </Text>
             </View>
           </View>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity
               onPress={() => this.openDetails('f', this.state.aObj?.followers)}
               style={styles.carditem}>
@@ -143,7 +144,7 @@ class UserDetails extends React.Component<Props, StateObj> {
                   style={styles.iconSize}
                   source={require('../assets/images/adduser80.png')}
                 />
-                <Text>Followers</Text>
+                <Text>{Constants.TEXT.Follower}</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity
@@ -155,11 +156,11 @@ class UserDetails extends React.Component<Props, StateObj> {
                   style={styles.iconSize}
                   source={require('../assets/images/checkeduser80.png')}
                 />
-                <Text>Following</Text>
+                <Text>{Constants.TEXT.Following}</Text>
               </View>
             </TouchableOpacity>
           </View>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity
               onPress={() =>
                 this.openDetails('g', this.state.aObj?.public_gists)
@@ -173,7 +174,7 @@ class UserDetails extends React.Component<Props, StateObj> {
                   style={styles.iconSize}
                   source={require('../assets/images/code80.png')}
                 />
-                <Text>Public Gists</Text>
+                <Text>{Constants.TEXT.PublicGist}</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity
@@ -189,7 +190,7 @@ class UserDetails extends React.Component<Props, StateObj> {
                   style={styles.iconSize}
                   source={require('../assets/images/repository80.png')}
                 />
-                <Text>Repositories</Text>
+                <Text>{Constants.TEXT.Repositories}</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -201,19 +202,19 @@ class UserDetails extends React.Component<Props, StateObj> {
   openDetails(screen: string, count: any) {
     if (count != null && count != 0) {
       if (screen === 'r') {
-        this.props.navigation.navigate('RepositoriesScreen', {
+        this.props.navigation.navigate(Constants.NAVIGATE_SCREEN.Repositories, {
           username: this.state.username,
         });
       } else if (screen === 'g') {
-        this.props.navigation.navigate('PublicGistScreen', {
+        this.props.navigation.navigate(Constants.NAVIGATE_SCREEN.PublicGist, {
           username: this.state.username,
         });
       } else if (screen === 'f') {
-        this.props.navigation.navigate('FollowerScreen', {
+        this.props.navigation.navigate(Constants.NAVIGATE_SCREEN.Follower, {
           username: this.state.username,
         });
       } else if (screen === 'o') {
-        this.props.navigation.navigate('FollowingScreen', {
+        this.props.navigation.navigate(Constants.NAVIGATE_SCREEN.Following, {
           username: this.state.username,
         });
       }
@@ -221,15 +222,9 @@ class UserDetails extends React.Component<Props, StateObj> {
   }
 
   getData() {
-    var baseURL = BASE_URL + 'users/' + this.state.username;
+    var baseURL = Constants.BASE_URL + 'users/' + this.state.username;
     try {
-      fetch(baseURL, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      })
+      fetch(baseURL, Constants.REQUEST_HEADER)
         .then(response => {
           if (response.ok) {
             return response.json();
@@ -250,7 +245,7 @@ class UserDetails extends React.Component<Props, StateObj> {
                   },
                 },
               ],
-              {cancelable: false},
+              { cancelable: false },
             );
             return null;
           }
@@ -262,11 +257,11 @@ class UserDetails extends React.Component<Props, StateObj> {
               aObj: responseJson,
             });
           } else {
-            this.setState({isLoading: false, aObj: null});
+            this.setState({ isLoading: false, aObj: null });
           }
         });
     } catch (e) {
-      this.setState({isLoading: false});
+      this.setState({ isLoading: false });
     }
   }
 }
@@ -290,6 +285,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingVertical: 4,
     paddingHorizontal: 20,
+    flexGrow: 1
   },
   cardDataMinHight: {
     flexDirection: 'column',
@@ -304,7 +300,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textblue: {
-    color: APP_COLOR,
+    color: Constants.APP_COLOR,
     fontSize: 20,
     padding: 4,
   },

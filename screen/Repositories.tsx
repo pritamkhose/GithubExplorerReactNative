@@ -11,8 +11,8 @@ import {
   Linking,
 } from 'react-native';
 
-import {BASE_URL, APP_COLOR} from '../components/Constants';
-import {Props, StateList, RepoItem} from '../model/models';
+import Constants from '../components/Constants';
+import { Props, StateList, RepoItem } from '../model/models';
 import Loading from '../components/Loading';
 
 class Repositories extends React.Component<Props, StateList> {
@@ -32,18 +32,12 @@ class Repositories extends React.Component<Props, StateList> {
 
   getData() {
     var baseURL =
-      BASE_URL +
+    Constants.BASE_URL +
       'users/' +
       this.state.username +
       '/repos?per_page=100&sort=updated';
     try {
-      fetch(baseURL, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      })
+      fetch(baseURL, Constants.REQUEST_HEADER)
         .then(response => {
           if (response.ok) {
             return response.json();
@@ -77,7 +71,7 @@ class Repositories extends React.Component<Props, StateList> {
           }),
         );
     } catch (e) {
-      this.setState({isLoading: false});
+      this.setState({ isLoading: false });
     }
   }
 
@@ -98,7 +92,7 @@ class Repositories extends React.Component<Props, StateList> {
           },
         },
       ],
-      {cancelable: false},
+      { cancelable: false },
     );
   }
 
@@ -140,11 +134,11 @@ class Repositories extends React.Component<Props, StateList> {
             key={index}
             onPress={() => this.openDetails(item.html_url)}>
             <View style={styles.carditem}>
-              <Text style={{paddingBottom: 5, color: APP_COLOR, fontSize: 20}}>
+              <Text style={{ paddingBottom: 5, color: Constants.APP_COLOR, fontSize: 20 }}>
                 {item.name}
               </Text>
               {item.description && item.description.length > 1 ? (
-                <Text style={{paddingBottom: 5, color: 'black', fontSize: 14}}>
+                <Text style={{ paddingBottom: 5, color: 'black', fontSize: 14 }}>
                   {item.description}
                 </Text>
               ) : null}
@@ -155,10 +149,10 @@ class Repositories extends React.Component<Props, StateList> {
                   alignItems: 'stretch',
                 }}>
                 <Text
-                  style={{paddingBottom: 5, color: APP_COLOR, fontSize: 14}}>
+                  style={{ paddingBottom: 5, color: Constants.APP_COLOR, fontSize: 14 }}>
                   {item.language}
                 </Text>
-                <View style={{flexDirection: 'row'}}>
+                <View style={{ flexDirection: 'row' }}>
                   <Image
                     style={styles.iconImg}
                     source={require('../assets/images/star80.png')}
@@ -172,7 +166,7 @@ class Repositories extends React.Component<Props, StateList> {
                   />
                   <Text style={styles.textblack}>
                     {' '}
-                    {item.watchers_count} 
+                    {item.watchers_count}
                   </Text>
                   <Image
                     style={styles.iconImg}

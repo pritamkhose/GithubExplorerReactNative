@@ -11,7 +11,7 @@ import {
   Linking,
 } from 'react-native';
 
-import {BASE_URL, APP_COLOR} from '../components/Constants';
+import Constants from '../components/Constants';
 import {Props, StateList, GistItem} from '../model/models';
 import Loading from '../components/Loading';
 
@@ -32,18 +32,12 @@ class PublicGist extends React.Component<Props, StateList> {
 
   getData() {
     var baseURL =
-      BASE_URL +
+      Constants.BASE_URL +
       'users/' +
       this.state.username +
       '/gists?per_page=100&sort=updated';
     try {
-      fetch(baseURL, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      })
+      fetch(baseURL, Constants.REQUEST_HEADER)
         .then(response => {
           if (response.ok) {
             return response.json();
@@ -140,7 +134,7 @@ class PublicGist extends React.Component<Props, StateList> {
             key={index}
             onPress={() => this.openDetails(item.html_url)}>
             <View style={styles.carditem}>
-              <Text style={{paddingBottom: 5, color: APP_COLOR, fontSize: 20}}>
+              <Text style={{paddingBottom: 5, color: Constants.APP_COLOR, fontSize: 20}}>
                 {item.description}
               </Text>
               {item.description && item.description.length > 1 ? (

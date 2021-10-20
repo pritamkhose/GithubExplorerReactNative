@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import {BASE_URL} from '../components/Constants';
+import Constants from '../components/Constants';
 import {Props, StateList, UserLoginItem} from '../model/models';
 import Loading from '../components/Loading';
 import FastImageLoad from '../components/FastImageLoad';
@@ -32,15 +32,9 @@ class Following extends React.Component<Props, StateList> {
 
   getData() {
     var baseURL =
-      BASE_URL + 'users/' + this.state.username + '/following?per_page=100';
+    Constants.BASE_URL + 'users/' + this.state.username + '/following?per_page=100';
     try {
-      fetch(baseURL, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      })
+      fetch(baseURL, Constants.REQUEST_HEADER)
         .then(response => {
           if (response.ok) {
             return response.json();
@@ -114,7 +108,7 @@ class Following extends React.Component<Props, StateList> {
   }
 
   openDetails(txt: string, url: string) {
-    this.props.navigation.navigate('UserDetails', {
+    this.props.navigation.navigate(Constants.NAVIGATE_SCREEN.UserDetails, {
       username: txt,
       avatar_url: url,
     });

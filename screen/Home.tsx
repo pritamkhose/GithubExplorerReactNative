@@ -12,7 +12,7 @@ import {
   Keyboard,
 } from 'react-native';
 
-import {BASE_URL} from '../components/Constants';
+import Constants from '../components/Constants';
 import Loading from '../components/Loading';
 import FastImageLoad from '../components/FastImageLoad';
 export interface Props {
@@ -59,15 +59,9 @@ export class HomeScreen extends React.Component<Props, State> {
 
   getData() {
     var baseURL =
-      BASE_URL + 'search/users?q=' + this.state.serachTxt + '&page=1'; // &per_page=100
+    Constants.BASE_URL + 'search/users?q=' + this.state.serachTxt + '&page=1'; // &per_page=100
     try {
-      fetch(baseURL, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      })
+      fetch(baseURL, Constants.REQUEST_HEADER)
         .then(response => {
           if (response.ok) {
             return response.json();
@@ -149,7 +143,7 @@ export class HomeScreen extends React.Component<Props, State> {
           <View style={styles.searchrow}>
             <TextInput
               style={styles.textInput}
-              placeholder="Please Enter some text for Serarch"
+              placeholder="Enter text for search user"
               underlineColorAndroid="transparent"
               onChangeText={text => this.setState({serachTxt: text})}
               onSubmitEditing={this.SubmitEdit}
@@ -181,7 +175,7 @@ export class HomeScreen extends React.Component<Props, State> {
 
   openDetails(txt: string, avatar_url: string) {
     console.log(txt);
-    this.props.navigation.navigate('UserDetails', {
+    this.props.navigation.navigate(Constants.NAVIGATE_SCREEN.UserDetails, {
       username: txt,
       avatar_url: avatar_url,
     });

@@ -8,7 +8,7 @@
  * @format
  */
 
-import React, {Fragment, useEffect} from 'react';
+import React, { Fragment, useEffect } from 'react';
 import {
   SafeAreaView,
   Platform,
@@ -20,8 +20,8 @@ import {
 } from 'react-native';
 
 import SplashScreen from 'react-native-splash-screen';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import 'react-native-gesture-handler';
 
 import HomeScreen from './screen/Home';
@@ -31,13 +31,16 @@ import FollowingScreen from './screen/Following';
 import RepositoriesScreen from './screen/Repositories';
 import PublicGistScreen from './screen/PublicGist';
 
+import Constants from './components/Constants';
+
 const Stack = createStackNavigator();
-const APP_COLOR = '#2196F3'; // import {APP_COLOR} from './components/Constants';
 
 const App = () => {
   useEffect(() => {
     SplashScreen.hide();
-    StatusBar.setBackgroundColor(APP_COLOR);
+    if (Platform.OS === 'android') {
+      StatusBar.setBackgroundColor(Constants.APP_COLOR);
+    }
   });
 
   return (
@@ -46,79 +49,81 @@ const App = () => {
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="Home"
-          headerMode="screen"
           screenOptions={{
             headerTintColor: '#FFFFFFFF',
             headerStyle: {
-              backgroundColor: APP_COLOR,
+              backgroundColor: Constants.APP_COLOR,
             },
             headerTitleStyle: {
               fontWeight: 'bold',
             },
             headerRight: () => (
-              <TouchableOpacity
-                onPress={() => {
-                  Alert.alert('', 'Do you want to exit?', [
-                    {
-                      text: 'Cancel',
-                      onPress: () => console.log('Cancel Pressed'),
-                      style: 'cancel',
-                    },
-                    {text: 'OK', onPress: () => doExit()},
-                  ]);
-                }}>
-                <Image
-                  style={{
-                    width: 24,
-                    height: 24,
-                    marginRight: 10,
-                    tintColor: '#FFFFFFFF',
-                  }}
-                  source={require('./assets/images/logout.png')}
-                />
-              </TouchableOpacity>
+              <>
+                {Platform.OS === 'android' ?
+                  <TouchableOpacity
+                    onPress={() => {
+                      Alert.alert('', 'Do you want to exit?', [
+                        {
+                          text: 'Cancel',
+                          onPress: () => console.log('Cancel Pressed'),
+                          style: 'cancel',
+                        },
+                        { text: 'OK', onPress: () => doExit() },
+                      ]);
+                    }}>
+                    <Image
+                      style={{
+                        width: 24,
+                        height: 24,
+                        marginRight: 10,
+                        tintColor: '#FFFFFFFF',
+                      }}
+                      source={require('./assets/images/logout.png')}
+                    />
+                  </TouchableOpacity> : null}
+              </>
             ),
           }}>
           <Stack.Screen
-            name="Home"
+            name={Constants.NAVIGATE_SCREEN.Home}
             component={HomeScreen}
             options={{
-              title: 'Github Explorer',
+              title: Constants.TEXT.GithubExplorer,
             }}
           />
           <Stack.Screen
-            name="UserDetails"
+            name={Constants.NAVIGATE_SCREEN.UserDetails}
             component={UserDetails}
             options={{
-              title: 'Github User Details',
+              title: Constants.TEXT.UserDetails,
             }}
           />
           <Stack.Screen
-            name="RepositoriesScreen"
+            name={Constants.NAVIGATE_SCREEN.Repositories}
             component={RepositoriesScreen}
             options={{
-              title: 'Repositories',
+              title: Constants.TEXT.Repositories
             }}
           />
           <Stack.Screen
-            name="PublicGistScreen"
+            name={Constants.NAVIGATE_SCREEN.PublicGist}
             component={PublicGistScreen}
             options={{
-              title: 'Public Gist',
+              title: Constants.TEXT.PublicGist
             }}
           />
           <Stack.Screen
-            name="FollowerScreen"
+            name={Constants.NAVIGATE_SCREEN.Follower}
             component={FollowerScreen}
             options={{
-              title: 'Followers',
+              title: Constants.TEXT.Follower
             }}
           />
           <Stack.Screen
-            name="FollowingScreen"
+            name={Constants.NAVIGATE_SCREEN.Following}
             component={FollowingScreen}
             options={{
-              title: 'Following',
+              title: Constants.TEXT.Following,
             }}
           />
         </Stack.Navigator>

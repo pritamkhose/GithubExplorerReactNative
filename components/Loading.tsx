@@ -1,10 +1,10 @@
 import React from 'react';
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
-import {APP_COLOR} from './Constants';
+import Constant from './Constants';
 
 const Loading = () => (
   <View style={styles.container}>
-    <ActivityIndicator size="large" color={APP_COLOR} />
+    <ActivityIndicator size="large" color={Constant.APP_COLOR} />
     <Text style={styles.centerText}>Loading ...</Text>
   </View>
 );
