@@ -69,8 +69,7 @@ Libraries Used
 * [Colors](https://reactnative.dev/docs/colors)
 * [Scrollview](https://www.tutorialspoint.com/react_native/react_native_scrollview.htm)
 * [Splash-Screen](https://medium.com/@appstud/add-a-splash-screen-to-a-react-native-app-810492e773f9)
-* [Handlebar Labs](hhttps://medium.com/handlebar-labs/how-to-add-a-splash-screen-to-a-react-native-app-ios-and-android-30a3cec835ae
-)
+* [Handlebar Labs](https://medium.com/handlebar-labs/how-to-add-a-splash-screen-to-a-react-native-app-ios-and-android-30a3cec835ae)
 * [FastImage caching](https://www.npmjs.com/package/react-native-fast-image)
 * [App Icon Generator iOS & Android](https://appicon.co/)
 * [Colors](https://reactnative.dev/docs/colors)
