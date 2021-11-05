@@ -1,144 +1,84 @@
-import React from 'react';
+import { CommonActions, useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
 import {
-  StyleSheet,
-  ScrollView,
-  RefreshControl,
-  View,
-  Text,
-  Image,
-  Alert,
-  TouchableOpacity,
+  RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View
 } from 'react-native';
-
+import Services from '../api/Services';
 import Constants from '../components/Constants';
-import {Props, StateList, UserLoginItem} from '../model/models';
-import Loading from '../components/Loading';
 import FastImageLoad from '../components/FastImageLoad';
+import Loading from '../components/Loading';
+import { UserLoginItem } from '../model/models';
 
-class Following extends React.Component<Props, StateList> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      username: props.route.params.username,
-      isLoading: true,
-      errorMsg: '',
-      aList: [],
-    };
+type Props = {
+  route: any;
+};
+
+const Following = ({ route }: Props) => {
+  const navigation = useNavigation();
+  const [isLoading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [username, setUsername] = useState('');
+  const [aList, setList] = useState<UserLoginItem[]>([]);
+
+  useEffect(() => {
+    setUsername(route.params.username)
+    getData(route.params.username);
+  }, [route]);
+
+  function getData(name: string) {
+    Services.getUserFollowing(name)
+      .then((response: any) => {
+        setLoading(false);
+        if (response && response.length !== 0) {
+          setErrorMsg('');
+          setList(response);
+        } else {
+          setErrorMsg('Nothing Found!');
+        }
+      }).catch((error: any) => {
+        setLoading(false);
+        setErrorMsg('Something is wrong with the server!');
+      });
   }
 
-  componentDidMount() {
-    this.getData();
-  }
+  return (
+    <View style={styles.container}>
+      {isLoading ? (
+        <Loading />
+      ) : aList === undefined ? (
+        <Text>{errorMsg}</Text>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={isLoading}
+              onRefresh={() => getData(username)}
+            />
+          }>
+          {aList.map((item: UserLoginItem, index: number) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => openDetails(item.login, item.avatar_url)}>
+              <View style={styles.carditem}>
+                <FastImageLoad style={styles.iconImg} uri={item.avatar_url} />
+                <Text style={styles.iconText}>{item.login}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      )}
+    </View>
+  );
 
-  getData() {
-    var baseURL =
-    Constants.BASE_URL + 'users/' + this.state.username + '/following?per_page=100';
-    try {
-      fetch(baseURL, Constants.REQUEST_HEADER)
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            this.showAlertRetry(
-              'Error - ' + response.status,
-              JSON.stringify(response),
-            );
-            return null;
-          }
-        })
-        .then(responseJson => {
-          if (responseJson && responseJson.length !== 0) {
-            this.setState({
-              isLoading: false,
-              aList: responseJson,
-            });
-          } else {
-            this.setState({
-              isLoading: false,
-              aList: [],
-              errorMsg: 'Nothing Found',
-            });
-          }
-        })
-        .catch(networkError =>
-          this.setState({
-            isLoading: false,
-            aList: [],
-            errorMsg: 'Something is wrong with the server!',
-          }),
-        );
-    } catch (e) {
-      this.setState({isLoading: false});
-    }
-  }
-
-  showAlertRetry(title: string, msg: string) {
-    Alert.alert(
-      title,
-      msg,
-      [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
+  function openDetails(username: string, url: string) {
+    navigation.dispatch(
+      CommonActions.navigate({
+        name: Constants.NAVIGATE_SCREEN.UserDetails,
+        params: {
+          username: username, avatar_url: url
         },
-        {
-          text: 'Retry',
-          onPress: () => {
-            this.getData();
-          },
-        },
-      ],
-      {cancelable: false},
-    );
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        {this.state.isLoading ? (
-          <Loading />
-        ) : this.state.aList == 0 ? (
-          <Text>{this.state.errorMsg}</Text>
-        ) : (
-          this.showList()
-        )}
-      </View>
-    );
-  }
-
-  openDetails(txt: string, url: string) {
-    this.props.navigation.navigate(Constants.NAVIGATE_SCREEN.UserDetails, {
-      username: txt,
-      avatar_url: url,
-    });
-  }
-
-  _onRefresh = () => {
-    this.getData();
-  };
-
-  showList() {
-    return (
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.isLoading}
-            onRefresh={this._onRefresh}
-          />
-        }>
-        {this.state.aList.map((item: UserLoginItem, index: number) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => this.openDetails(item.login, item.avatar_url)}>
-            <View style={styles.carditem}>
-              <FastImageLoad style={styles.iconImg} uri={item.avatar_url} />
-              <Text style={styles.iconText}>{item.login}</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+      })
     );
   }
 }

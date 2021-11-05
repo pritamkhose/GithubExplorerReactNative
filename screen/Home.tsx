@@ -1,20 +1,13 @@
 import React from 'react';
 import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  RefreshControl,
-  TextInput,
-  Image,
-  Alert,
-  TouchableOpacity,
-  Keyboard,
+  Alert, Image, Keyboard, RefreshControl, ScrollView, StyleSheet,
+  Text, TextInput, TouchableOpacity, View
 } from 'react-native';
-
+import Services from '../api/Services';
 import Constants from '../components/Constants';
-import Loading from '../components/Loading';
 import FastImageLoad from '../components/FastImageLoad';
+import Loading from '../components/Loading';
+
 export interface Props {
   navigation: any;
 }
@@ -31,7 +24,7 @@ export interface UserItem {
   avatar_url: string;
 }
 
-export class HomeScreen extends React.Component<Props, State> {
+export class Home extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -58,45 +51,27 @@ export class HomeScreen extends React.Component<Props, State> {
   }
 
   getData() {
-    var baseURL =
-    Constants.BASE_URL + 'search/users?q=' + this.state.serachTxt + '&page=1'; // &per_page=100
-    try {
-      fetch(baseURL, Constants.REQUEST_HEADER)
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            this.showAlertRetry(
-              'Error - ' + response.status,
-              JSON.stringify(response),
-            );
-            return null;
-          }
-        })
-        .then(responseJson => {
-          if (responseJson && responseJson.total_count !== 0) {
-            this.setState({
-              isLoading: false,
-              aList: responseJson.items,
-            });
-          } else {
-            this.setState({
-              isLoading: false,
-              aList: [],
-              errorMsg: 'Nothing Found',
-            });
-          }
-        })
-        .catch(networkError =>
+    Services.getUserSearch(this.state.serachTxt, 1)
+      .then((response: any) => {
+        if (response && response.total_count !== 0) {
+          this.setState({
+            isLoading: false,
+            aList: response.items,
+          });
+        } else {
           this.setState({
             isLoading: false,
             aList: [],
-            errorMsg: 'Something is wrong with the server!',
-          }),
-        );
-    } catch (e) {
-      this.setState({isLoading: false});
-    }
+            errorMsg: 'Nothing Found',
+          });
+        }
+      }).catch((error: any) => {
+        this.setState({
+          isLoading: false,
+          aList: [],
+          errorMsg: 'Something is wrong with the server!',
+        });
+      });
   }
 
   showAlert(msg: string) {
@@ -110,28 +85,7 @@ export class HomeScreen extends React.Component<Props, State> {
           style: 'cancel',
         },
       ],
-      {cancelable: false},
-    );
-  }
-
-  showAlertRetry(title: string, msg: string) {
-    Alert.alert(
-      title,
-      msg,
-      [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {
-          text: 'Retry',
-          onPress: () => {
-            this.getData();
-          },
-        },
-      ],
-      {cancelable: false},
+      { cancelable: false },
     );
   }
 
@@ -145,7 +99,7 @@ export class HomeScreen extends React.Component<Props, State> {
               style={styles.textInput}
               placeholder="Enter text for search user"
               underlineColorAndroid="transparent"
-              onChangeText={text => this.setState({serachTxt: text})}
+              onChangeText={text => this.setState({ serachTxt: text })}
               onSubmitEditing={this.SubmitEdit}
             />
             <TouchableOpacity onPress={() => this.getSearch()}>
@@ -158,10 +112,10 @@ export class HomeScreen extends React.Component<Props, State> {
           <View style={styles.center}>
             {this.state.isLoading ? (
               <Loading />
-            ) : this.state.aList.length == 0 ? (
-              <Text>{this.state.errorMsg}</Text>
-            ) : (
+            ) : this.state.aList && this.state.aList.length > 0 ? (
               this.showList()
+            ) : (
+              <Text>{this.state.errorMsg}</Text>
             )}
           </View>
         </View>
@@ -201,7 +155,7 @@ export class HomeScreen extends React.Component<Props, State> {
             onPress={() => this.openDetails(item.login, item.avatar_url)}>
             <View style={styles.carditem}>
               <FastImageLoad style={styles.iconImg} uri={item.avatar_url} />
-              <Text style={{padding: 10, color: 'black', fontSize: 16}}>
+              <Text style={{ padding: 10, color: 'black', fontSize: 16 }}>
                 {item.login}
               </Text>
             </View>
@@ -253,4 +207,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default Home;

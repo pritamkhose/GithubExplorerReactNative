@@ -61,7 +61,7 @@ Screenshots
 ![List of User Repositories](screenshot/repo.png "List of User Repositories")
 ![List of User Public Gist](screenshot/gist.png "List of User Public Gist")
 
-Libraries Used
+Libraries used
 --------------
 * [React Getting started](https://reactnative.dev/docs/getting-started)
 * [Getting Started with TypeScript](https://reactnative.dev/docs/typescript)
@@ -74,6 +74,16 @@ Libraries Used
 * [App Icon Generator iOS & Android](https://appicon.co/)
 * [Colors](https://reactnative.dev/docs/colors)
 * [Android Image Asset Studio](https://developer.android.com/studio/write/image-asset-studio)
+
+
+Axios references
+--------------
+* [React native with axios](https://betterprogramming.pub/managing-api-requests-http-https-in-react-native-using-axios-9ebf75cbca9b)
+* [Example](https://gist.github.com/sheharyarn/7f43ef98c5363a34652e60259370d2cb)
+* [Axios with react](https://shyr.io/blog/axios-with-react-for-making-requests)
+* [Timeout](https://stackoverflow.com/questions/36690451/timeout-feature-in-the-axios-library-is-not-working)
+* [Handling errors](https://stackoverflow.com/questions/49967779/axios-handling-errors)
+
 
 Install npm dependencies
 --------------
