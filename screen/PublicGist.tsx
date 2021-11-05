@@ -1,16 +1,13 @@
 
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import {
   Linking, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View
 } from 'react-native';
 import Services from '../api/Services';
-import Constants from '../components/Constants';
+import Constants from '../app/Constants';
 import Loading from '../components/Loading';
-import { GistItem } from '../model/models';
-
-type Props = {
-  route: any;
-};
+import { GistItem, Props } from '../model/models';
 
 const PublicGist = ({ route }: Props) => {
   const [isLoading, setLoading] = useState(true);
@@ -60,14 +57,16 @@ const PublicGist = ({ route }: Props) => {
               key={index}
               onPress={() => Linking.openURL(item.html_url)}>
               <View style={styles.carditem}>
-                <Text style={styles.titleText}>
-                  {item.description}
-                </Text>
                 {item.description && item.description.length > 1 ? (
-                  <Text style={styles.textblack}>
-                    Last updated at : {item.updated_at}
+                  <Text style={styles.titleText}>
+                    {item.description}
                   </Text>
-                ) : null}
+                ) : <Text style={styles.textblack}>
+                  NA
+                </Text>}
+                <Text style={styles.textblack}>
+                  Updated at : {moment(item.updated_at).format("DD:MM:YYYY HH:mm A")}
+                </Text>
                 <View
                   style={{
                     flexDirection: 'row',

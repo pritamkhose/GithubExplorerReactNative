@@ -1,269 +1,239 @@
-import React from 'react';
+import { CommonActions, useNavigation } from '@react-navigation/native';
+import moment from 'moment';
+import React, { useContext, useEffect, useState } from 'react';
 import {
-  StyleSheet,
-  ScrollView,
-  RefreshControl,
-  View,
-  Text,
-  Image,
-  Alert,
-  TouchableOpacity,
+  Linking, Image, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View
 } from 'react-native';
-
-import Constants from '../components/Constants';
-import { Props, StateObj } from '../model/models';
-import Loading from '../components/Loading';
+import Services from '../api/Services';
+import { AppContext } from '../app/AppContext';
+import Constants from '../app/Constants';
 import FastImageLoad from '../components/FastImageLoad';
+import Loading from '../components/Loading';
+import { Props, UserDetailObject } from '../model/models';
 
-class UserDetails extends React.Component<Props, StateObj> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      username: props.route.params.username,
-      avatar_url: props.route.params.avatar_url,
-      isLoading: true,
-      errorMsg: '',
-      aObj: null,
-    };
+const UserDetails = ({ route }: Props) => {
+  const navigation = useNavigation();
+  const [searchUser, setSearchUser] = useContext(AppContext);
+
+  const [isLoading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [username, setUsername] = useState('');
+  const [avatar_url, setAvatarURL] = useState('');
+  const [aObj, setObj] = useState<UserDetailObject>();
+
+  useEffect(() => {
+    setUsername(route.params.username)
+    setSearchUser(route.params.username)
+    setAvatarURL(route.params.avatar_url)
+    getData(route.params.username, route.params.avatar_url)
+  }, [route]);
+
+  function getData(name: string, url: string) {
+    setLoading(true);
+    Services.getUserDetails(name)
+      .then((response: any) => {
+        setLoading(false);
+        if (response) {
+          setErrorMsg('');
+          setObj(response);
+        } else {
+          setErrorMsg('Nothing Found!');
+        }
+      }).catch((error: any) => {
+        setLoading(false);
+        setErrorMsg('Something is wrong with the server!');
+      });
   }
 
-  componentDidMount() {
-    this.getData();
-  }
-
-  componentDidUpdate() {
-    if (this.props.route.params.username !== this.state.username) {
-      this.setState(
-        {
-          username: this.props.route.params.username,
-          avatar_url: this.props.route.params.avatar_url,
-        },
-        () => {
-          console.log(this.state.username, this.state.avatar_url);
-          this.getData();
-        },
-      );
-    }
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        {this.state.isLoading ? (
-          <Loading />
-        ) : this.state && !this.state.aObj ? (
-          <Text>{this.state.errorMsg}</Text>
-        ) : (
-          this.showData()
-        )}
-      </View>
-    );
-  }
-
-  _onRefresh = () => {
-    this.getData();
-  };
-
-  showData() {
-    return (
-      <ScrollView
-      contentContainerStyle={{flexGrow: 1}}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.isLoading}
-            onRefresh={this._onRefresh}
-          />
-        }>
-        <>
-          <View style={styles.carditem}>
-            <View style={{ flexDirection: 'row' }}>
-              <FastImageLoad
-                style={styles.iconImg}
-                uri={this.state.avatar_url}
-              />
-              <View
-                style={
-                  this.state.aObj?.name == null
-                    ? styles.cardDataMinHight
-                    : styles.cardData
-                }>
-                <Text style={styles.textblue}>{this.state.aObj?.name}</Text>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={styles.textblack}>{this.state.aObj?.bio}</Text>
+  return (
+    <View style={styles.container}>
+      {isLoading ? (
+        <Loading />
+      ) : aObj === null ? (
+        <Text>{errorMsg}</Text>
+      ) : (
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={isLoading}
+              onRefresh={() => getData(username, avatar_url)}
+            />
+          }>
+          <>
+            <View style={styles.carditem}>
+              <View style={{ flexDirection: 'row' }}>
+                <FastImageLoad
+                  style={styles.iconImg}
+                  uri={avatar_url}
+                />
+                <View
+                  style={
+                    aObj?.name == null
+                      ? styles.cardDataMinHight
+                      : styles.cardData
+                  }>
+                  <Text style={styles.textblue}>{aObj?.name}</Text>
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text style={styles.textblack}>{aObj?.bio}</Text>
+                  </View>
+                  <Text style={styles.textblack}>
+                    {aObj?.location}
+                  </Text>
                 </View>
+              </View>
+              {aObj?.email != null ? (
+                <View style={styles.rowData}>
+                  <Image
+                    style={styles.iconSize}
+                    source={require('../assets/images/email96.png')}
+                  />
+                  <TouchableOpacity
+                    onPress={() => Linking.openURL('mailto:' + aObj.email + '?subject=' + Constants.APP_NAME + '&body=' + `Hi ${username},\n\nThanks & Regards,\n\n`)}>
+                    <Text style={styles.textblack}>{aObj.email}</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : null}
+              {aObj?.blog ? (
+                <View style={styles.rowData}>
+                  <Image
+                    style={styles.iconSize}
+                    source={require('../assets/images/info80.png')}
+                  />
+                  <TouchableOpacity
+                    onPress={() => Linking.openURL(aObj.blog)}>
+                    <Text style={styles.textblack}>{aObj.blog}</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : null}
+              <View style={styles.rowData}>
+                <Image
+                  style={styles.iconSize}
+                  source={require('../assets/images/create80.png')}
+                />
                 <Text style={styles.textblack}>
-                  {this.state.aObj?.location}
+                  Joined at : {moment(aObj?.created_at).format("DD:MM:YYYY HH:mm A")}
+                </Text>
+              </View>
+              <View style={styles.rowData}>
+                <Image
+                  style={styles.iconSize}
+                  source={require('../assets/images/clock80.png')}
+                />
+                <Text style={styles.textblack}>
+                  Updated at : {moment(aObj?.updated_at).format("DD:MM:YYYY HH:mm A")}
                 </Text>
               </View>
             </View>
-            {this.state && this.state.aObj?.email != null ? (
-              <View style={styles.rowData}>
-                <Image
-                  style={styles.iconSize}
-                  source={require('../assets/images/email96.png')}
-                />
-                <Text style={styles.textblack}>{this.state.aObj.email}</Text>
-              </View>
-            ) : null}
-            {this.state && this.state.aObj?.blog ? (
-              <View style={styles.rowData}>
-                <Image
-                  style={styles.iconSize}
-                  source={require('../assets/images/info80.png')}
-                />
-                <Text style={styles.textblack}>{this.state.aObj.blog}</Text>
-              </View>
-            ) : null}
-            <View style={styles.rowData}>
-              <Image
-                style={styles.iconSize}
-                source={require('../assets/images/create80.png')}
-              />
-              <Text style={styles.textblack}>
-                Joined at : {this.state.aObj?.created_at}
-              </Text>
+            <View style={{ flexDirection: 'row' }}>
+              <TouchableOpacity
+                onPress={() => openDetails('f', aObj?.followers)}
+                style={styles.carditem}>
+                <Text style={styles.textCount}>{aObj?.followers}</Text>
+                <View style={styles.imgtxt}>
+                  <Image
+                    style={styles.iconSize}
+                    source={require('../assets/images/adduser80.png')}
+                  />
+                  <Text>{Constants.TEXT.Follower}</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => openDetails('o', aObj?.following)}
+                style={styles.carditem}>
+                <Text style={styles.textCount}>{aObj?.following}</Text>
+                <View style={styles.imgtxt}>
+                  <Image
+                    style={styles.iconSize}
+                    source={require('../assets/images/checkeduser80.png')}
+                  />
+                  <Text>{Constants.TEXT.Following}</Text>
+                </View>
+              </TouchableOpacity>
             </View>
-            <View style={styles.rowData}>
-              <Image
-                style={styles.iconSize}
-                source={require('../assets/images/clock80.png')}
-              />
-              <Text style={styles.textblack}>
-                Last updated at : {this.state.aObj?.updated_at}
-              </Text>
+            <View style={{ flexDirection: 'row' }}>
+              <TouchableOpacity
+                onPress={() =>
+                  openDetails('g', aObj?.public_gists)
+                }
+                style={styles.carditem}>
+                <Text style={styles.textCount}>
+                  {aObj?.public_gists}
+                </Text>
+                <View style={styles.imgtxt}>
+                  <Image
+                    style={styles.iconSize}
+                    source={require('../assets/images/code80.png')}
+                  />
+                  <Text>{Constants.TEXT.PublicGist}</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  openDetails('r', aObj?.public_repos)
+                }
+                style={styles.carditem}>
+                <Text style={styles.textCount}>
+                  {aObj?.public_repos}
+                </Text>
+                <View style={styles.imgtxt}>
+                  <Image
+                    style={styles.iconSize}
+                    source={require('../assets/images/repository80.png')}
+                  />
+                  <Text>{Constants.TEXT.Repositories}</Text>
+                </View>
+              </TouchableOpacity>
             </View>
-          </View>
-          <View style={{ flexDirection: 'row' }}>
-            <TouchableOpacity
-              onPress={() => this.openDetails('f', this.state.aObj?.followers)}
-              style={styles.carditem}>
-              <Text style={styles.textCount}>{this.state.aObj?.followers}</Text>
-              <View style={styles.imgtxt}>
-                <Image
-                  style={styles.iconSize}
-                  source={require('../assets/images/adduser80.png')}
-                />
-                <Text>{Constants.TEXT.Follower}</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => this.openDetails('o', this.state.aObj?.following)}
-              style={styles.carditem}>
-              <Text style={styles.textCount}>{this.state.aObj?.following}</Text>
-              <View style={styles.imgtxt}>
-                <Image
-                  style={styles.iconSize}
-                  source={require('../assets/images/checkeduser80.png')}
-                />
-                <Text>{Constants.TEXT.Following}</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-          <View style={{ flexDirection: 'row' }}>
-            <TouchableOpacity
-              onPress={() =>
-                this.openDetails('g', this.state.aObj?.public_gists)
-              }
-              style={styles.carditem}>
-              <Text style={styles.textCount}>
-                {this.state.aObj?.public_gists}
-              </Text>
-              <View style={styles.imgtxt}>
-                <Image
-                  style={styles.iconSize}
-                  source={require('../assets/images/code80.png')}
-                />
-                <Text>{Constants.TEXT.PublicGist}</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                this.openDetails('r', this.state.aObj?.public_repos)
-              }
-              style={styles.carditem}>
-              <Text style={styles.textCount}>
-                {this.state.aObj?.public_repos}
-              </Text>
-              <View style={styles.imgtxt}>
-                <Image
-                  style={styles.iconSize}
-                  source={require('../assets/images/repository80.png')}
-                />
-                <Text>{Constants.TEXT.Repositories}</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </>
-      </ScrollView>
-    );
-  }
+          </>
+        </ScrollView>
+      )}
+    </View>
+  );
 
-  openDetails(screen: string, count: any) {
+  function openDetails(screen: string, count: any) {
     if (count != null && count != 0) {
       if (screen === 'r') {
-        this.props.navigation.navigate(Constants.NAVIGATE_SCREEN.Repositories, {
-          username: this.state.username,
-        });
+        navigation.dispatch(
+          CommonActions.navigate({
+            name: Constants.NAVIGATE_SCREEN.Repositories,
+            params: {
+              username: username
+            },
+          })
+        );
       } else if (screen === 'g') {
-        this.props.navigation.navigate(Constants.NAVIGATE_SCREEN.PublicGist, {
-          username: this.state.username,
-        });
+        navigation.dispatch(
+          CommonActions.navigate({
+            name: Constants.NAVIGATE_SCREEN.PublicGist,
+            params: {
+              username: username
+            },
+          })
+        );
       } else if (screen === 'f') {
-        this.props.navigation.navigate(Constants.NAVIGATE_SCREEN.Follower, {
-          username: this.state.username,
-        });
+        navigation.dispatch(
+          CommonActions.navigate({
+            name: Constants.NAVIGATE_SCREEN.Follower,
+            params: {
+              username: username
+            },
+          })
+        );
       } else if (screen === 'o') {
-        this.props.navigation.navigate(Constants.NAVIGATE_SCREEN.Following, {
-          username: this.state.username,
-        });
+        navigation.dispatch(
+          CommonActions.navigate({
+            name: Constants.NAVIGATE_SCREEN.Following,
+            params: {
+              username: username
+            },
+          })
+        );
       }
     }
   }
 
-  getData() {
-    var baseURL = Constants.BASE_URL + 'users/' + this.state.username;
-    try {
-      fetch(baseURL, Constants.REQUEST_HEADER)
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            Alert.alert(
-              'Error - ' + response.status,
-              JSON.stringify(response),
-              [
-                {
-                  text: 'Cancel',
-                  onPress: () => console.log('Cancel Pressed'),
-                  style: 'cancel',
-                },
-                {
-                  text: 'Retry',
-                  onPress: () => {
-                    this.getData();
-                  },
-                },
-              ],
-              { cancelable: false },
-            );
-            return null;
-          }
-        })
-        .then(responseJson => {
-          if (responseJson) {
-            this.setState({
-              isLoading: false,
-              aObj: responseJson,
-            });
-          } else {
-            this.setState({ isLoading: false, aObj: null });
-          }
-        });
-    } catch (e) {
-      this.setState({ isLoading: false });
-    }
-  }
 }
 
 const styles = StyleSheet.create({
@@ -317,6 +287,7 @@ const styles = StyleSheet.create({
   iconImg: {
     width: 120,
     height: 120,
+    marginBottom: 8
   },
   textCount: {
     fontSize: 20,

@@ -1,20 +1,4 @@
-export interface StateObj {
-  username: string;
-  avatar_url: string;
-  isLoading: boolean;
-  errorMsg: string;
-  aObj: UserDetailObject | null;
-}
-
-export interface StateList {
-  username: string;
-  isLoading: boolean;
-  errorMsg: string;
-  aList: any | null;
-}
-
 export interface Props {
-  navigation: any;
   route: PropsRoutes;
 }
 

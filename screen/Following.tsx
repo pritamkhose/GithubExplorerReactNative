@@ -1,28 +1,25 @@
 import { CommonActions, useNavigation } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View
 } from 'react-native';
 import Services from '../api/Services';
-import Constants from '../components/Constants';
+import { AppContext } from '../app/AppContext';
+import Constants from '../app/Constants';
 import FastImageLoad from '../components/FastImageLoad';
 import Loading from '../components/Loading';
-import { UserLoginItem } from '../model/models';
-
-type Props = {
-  route: any;
-};
+import { Props, UserLoginItem } from '../model/models';
 
 const Following = ({ route }: Props) => {
   const navigation = useNavigation();
+  const [searchUser, setSearchUser] = useContext(AppContext);
+
   const [isLoading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
-  const [username, setUsername] = useState('');
   const [aList, setList] = useState<UserLoginItem[]>([]);
 
   useEffect(() => {
-    setUsername(route.params.username)
-    getData(route.params.username);
+    getData(searchUser);
   }, [route]);
 
   function getData(name: string) {
@@ -53,7 +50,7 @@ const Following = ({ route }: Props) => {
           refreshControl={
             <RefreshControl
               refreshing={isLoading}
-              onRefresh={() => getData(username)}
+              onRefresh={() => getData(searchUser)}
             />
           }>
           {aList.map((item: UserLoginItem, index: number) => (
@@ -72,6 +69,7 @@ const Following = ({ route }: Props) => {
   );
 
   function openDetails(username: string, url: string) {
+    setSearchUser(username);
     navigation.dispatch(
       CommonActions.navigate({
         name: Constants.NAVIGATE_SCREEN.UserDetails,

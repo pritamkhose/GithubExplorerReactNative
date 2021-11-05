@@ -1,6 +1,6 @@
 import React from 'react';
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
-import Constant from './Constants';
+import Constant from '../app/Constants';
 
 const Loading = () => (
   <View style={styles.container}>

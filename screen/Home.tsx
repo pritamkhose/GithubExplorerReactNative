@@ -4,7 +4,7 @@ import {
   Text, TextInput, TouchableOpacity, View
 } from 'react-native';
 import Services from '../api/Services';
-import Constants from '../components/Constants';
+import Constants from '../app/Constants';
 import FastImageLoad from '../components/FastImageLoad';
 import Loading from '../components/Loading';
 

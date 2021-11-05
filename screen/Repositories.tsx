@@ -3,13 +3,9 @@ import {
   Image, Linking, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View
 } from 'react-native';
 import Services from '../api/Services';
-import Constants from '../components/Constants';
+import Constants from '../app/Constants';
 import Loading from '../components/Loading';
-import { RepoItem } from '../model/models';
-
-type Props = {
-  route: any;
-};
+import { Props, RepoItem } from '../model/models';
 
 const Repositories = ({ route }: Props) => {
   const [isLoading, setLoading] = useState(true);
