@@ -3,7 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import Modal from 'react-native-modal';
 
 type NoInternetModalProps = {
-  show: Boolean;
+  show: boolean;
 };
 
 const NoInternetModal = ({show}: NoInternetModalProps) => (

@@ -1,25 +1,25 @@
 import axios from 'axios';
 import {Alert} from 'react-native';
 
-// import { Config } from 'react-native-config';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-// const getToken = async () => await AsyncStorage.getItem("access-token")
+// TODO import { Config } from 'react-native-config';
+// TODO import AsyncStorage from '@react-native-async-storage/async-storage';
+// TODO const getToken = async () => await AsyncStorage.getItem("access-token")
 
 // Create an Axios Client with defaults
-const client = axios.create({
+const HttpClient = axios.create({
   baseURL: 'https://api.github.com/',
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
   },
   timeout: 1000 * 10, // Wait for 10 seconds
-  // auth: { Authorization: 'Bearer ' + { getToken } }
+  // TODO auth: { Authorization: 'Bearer ' + { getToken } }
 });
 
 // Request Wrapper with default success/error actions
 
 // Intercept all requests
-client.interceptors.request.use(
+HttpClient.interceptors.request.use(
   config => {
     console.log(config.method.toUpperCase(), config.baseURL, config.url);
     return config;
@@ -28,9 +28,9 @@ client.interceptors.request.use(
 );
 
 // Intercept all responses
-client.interceptors.response.use(
+HttpClient.interceptors.response.use(
   async response => {
-    // console.debug('Request Successful!', response);
+    // TODO console.debug('Request Successful!', response);
     return response.data;
   },
   error => {
@@ -57,7 +57,6 @@ client.interceptors.response.use(
         JSON.stringify(error),
       );
     }
-    // return Promise.reject(error);
     return Promise.reject(error.response || error.message);
   },
 );
@@ -77,4 +76,4 @@ function showAlert(title, msg) {
   );
 }
 
-export default client;
+export default HttpClient;

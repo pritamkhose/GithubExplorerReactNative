@@ -91,6 +91,8 @@ Install npm dependencies
 npm i react-native-splash-screen
 npm i hammerjs
 npm i react-native-reanimated react-native-gesture-handler react-native-screens react-native-safe-area-context @react-native-community/masked-view react-navigation react-navigation-stack
+
+yarn add @babel/preset-env --dev
 ```
 
 IDE setup
