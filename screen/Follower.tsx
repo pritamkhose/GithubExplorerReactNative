@@ -1,16 +1,22 @@
-import { CommonActions, useNavigation } from '@react-navigation/native';
-import React, { useContext, useEffect, useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {CommonActions, useNavigation} from '@react-navigation/native';
+import React, {useContext, useEffect, useState} from 'react';
 import {
-  RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Services from '../api/Services';
-import { AppContext } from '../app/AppContext';
+import {AppContext} from '../app/AppContext';
 import Constants from '../app/Constants';
 import FastImageLoad from '../components/FastImageLoad';
 import Loading from '../components/Loading';
-import { Props, UserLoginItem } from '../model/models';
+import {Props, UserLoginItem} from '../model/models';
 
-const Follower = ({ route }: Props) => {
+const Follower = ({route}: Props) => {
   const navigation = useNavigation();
   const [searchUser, setSearchUser] = useContext(AppContext);
 
@@ -32,7 +38,8 @@ const Follower = ({ route }: Props) => {
         } else {
           setErrorMsg('Nothing Found!');
         }
-      }).catch((error: any) => {
+      })
+      .catch(() => {
         setLoading(false);
         setErrorMsg('Something is wrong with the server!');
       });
@@ -74,12 +81,13 @@ const Follower = ({ route }: Props) => {
       CommonActions.navigate({
         name: Constants.NAVIGATE_SCREEN.UserDetails,
         params: {
-          username: username, avatar_url: url
+          username: username,
+          avatar_url: url,
         },
-      })
+      }),
     );
   }
-}
+};
 
 const styles = StyleSheet.create({
   container: {

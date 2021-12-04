@@ -1,7 +1,15 @@
 import React from 'react';
 import {
-  Alert, Image, Keyboard, RefreshControl, ScrollView, StyleSheet,
-  Text, TextInput, TouchableOpacity, View
+  Alert,
+  Image,
+  Keyboard,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Services from '../api/Services';
 import Constants from '../app/Constants';
@@ -65,7 +73,8 @@ export class Home extends React.Component<Props, State> {
             errorMsg: 'Nothing Found',
           });
         }
-      }).catch((error: any) => {
+      })
+      .catch(() => {
         this.setState({
           isLoading: false,
           aList: [],
@@ -85,7 +94,7 @@ export class Home extends React.Component<Props, State> {
           style: 'cancel',
         },
       ],
-      { cancelable: false },
+      {cancelable: false},
     );
   }
 
@@ -99,7 +108,7 @@ export class Home extends React.Component<Props, State> {
               style={styles.textInput}
               placeholder="Enter text for search user"
               underlineColorAndroid="transparent"
-              onChangeText={text => this.setState({ serachTxt: text })}
+              onChangeText={text => this.setState({serachTxt: text})}
               onSubmitEditing={this.SubmitEdit}
             />
             <TouchableOpacity onPress={() => this.getSearch()}>
@@ -155,9 +164,7 @@ export class Home extends React.Component<Props, State> {
             onPress={() => this.openDetails(item.login, item.avatar_url)}>
             <View style={styles.carditem}>
               <FastImageLoad style={styles.iconImg} uri={item.avatar_url} />
-              <Text style={{ padding: 10, color: 'black', fontSize: 16 }}>
-                {item.login}
-              </Text>
+              <Text style={styles.login}>{item.login}</Text>
             </View>
           </TouchableOpacity>
         ))}
@@ -204,6 +211,11 @@ const styles = StyleSheet.create({
     padding: 5,
     backgroundColor: 'white',
     borderRadius: 5,
+  },
+  login: {
+    padding: 10,
+    color: 'black',
+    fontSize: 16,
   },
 });
 

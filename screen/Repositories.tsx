@@ -1,20 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  Image, Linking, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View
+  Image,
+  Linking,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Services from '../api/Services';
 import Constants from '../app/Constants';
 import Loading from '../components/Loading';
-import { Props, RepoItem } from '../model/models';
+import {Props, RepoItem} from '../model/models';
 
-const Repositories = ({ route }: Props) => {
+const Repositories = ({route}: Props) => {
   const [isLoading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
   const [username, setUsername] = useState('');
   const [aList, setList] = useState<RepoItem[]>([]);
 
   useEffect(() => {
-    setUsername(route.params.username)
+    setUsername(route.params.username);
     getData(route.params.username);
   }, [route]);
 
@@ -28,7 +35,8 @@ const Repositories = ({ route }: Props) => {
         } else {
           setErrorMsg('Nothing Found!');
         }
-      }).catch((error: any) => {
+      })
+      .catch(() => {
         setLoading(false);
         setErrorMsg('Something is wrong with the server!');
       });
@@ -54,36 +62,26 @@ const Repositories = ({ route }: Props) => {
               key={index}
               onPress={() => Linking.openURL(item.html_url)}>
               <View style={styles.carditem}>
-                <Text style={styles.textTitle}>
-                  {item.name}
-                </Text>
+                <Text style={styles.textTitle}>{item.name}</Text>
                 {item.description && item.description.length > 1 ? (
-                  <Text style={styles.textblack}>
-                    {item.description}
-                  </Text>
+                  <Text style={styles.textblack}>{item.description}</Text>
                 ) : null}
-                <View
-                  style={styles.viewLang}>
-                  <Text
-                    style={styles.textLang}>
-                    {item.language}
-                  </Text>
-                  <View style={{ flexDirection: 'row' }}>
+                <View style={styles.viewLang}>
+                  <Text style={styles.textLang}>{item.language}</Text>
+                  <View style={styles.flexDirectionRow}>
                     <Image
                       style={styles.iconImg}
                       source={require('../assets/images/star80.png')}
                     />
                     <Text style={styles.textblack}>
-                      {' '}{item.stargazers_count}
+                      {' '}
+                      {item.stargazers_count}
                     </Text>
                     <Image
                       style={styles.iconImg}
                       source={require('../assets/images/clock80.png')}
                     />
-                    <Text style={styles.textblack}>
-                      {' '}
-                      {item.watchers_count}
-                    </Text>
+                    <Text style={styles.textblack}> {item.watchers_count}</Text>
                     <Image
                       style={styles.iconImg}
                       source={require('../assets/images/codefork96.png')}
@@ -98,7 +96,7 @@ const Repositories = ({ route }: Props) => {
       )}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -132,13 +130,16 @@ const styles = StyleSheet.create({
   textLang: {
     paddingBottom: 4,
     color: Constants.APP_COLOR,
-    fontSize: 14
+    fontSize: 14,
   },
   textTitle: {
     paddingBottom: 4,
     color: Constants.APP_COLOR,
-    fontSize: 18
-  }
+    fontSize: 18,
+  },
+  flexDirectionRow: {
+    flexDirection: 'row',
+  },
 });
 
 export default Repositories;

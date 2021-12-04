@@ -7,7 +7,7 @@ const Constants = {
     Follower: 'FollowerScreen',
     Following: 'FollowingScreen',
     Repositories: 'RepositoriesScreen',
-    PublicGist: 'PublicGistScreen'
+    PublicGist: 'PublicGistScreen',
   },
   TEXT: {
     Home: 'Github Explorer',
@@ -15,8 +15,8 @@ const Constants = {
     Follower: ' Follower',
     Following: ' Following',
     Repositories: ' Repositories',
-    PublicGist: ' Public Gist'
-  }
+    PublicGist: ' Public Gist',
+  },
 };
 
 export default Constants;

@@ -1,18 +1,27 @@
-import { CommonActions, useNavigation } from '@react-navigation/native';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {CommonActions, useNavigation} from '@react-navigation/native';
 import moment from 'moment';
-import React, { useContext, useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
-  Linking, Image, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View
+  Image,
+  Linking,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Services from '../api/Services';
-import { AppContext } from '../app/AppContext';
+import {AppContext} from '../app/AppContext';
 import Constants from '../app/Constants';
 import FastImageLoad from '../components/FastImageLoad';
 import Loading from '../components/Loading';
-import { Props, UserDetailObject } from '../model/models';
+import {Props, UserDetailObject} from '../model/models';
 
-const UserDetails = ({ route }: Props) => {
+const UserDetails = ({route}: Props) => {
   const navigation = useNavigation();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [searchUser, setSearchUser] = useContext(AppContext);
 
   const [isLoading, setLoading] = useState(true);
@@ -22,14 +31,15 @@ const UserDetails = ({ route }: Props) => {
   const [aObj, setObj] = useState<UserDetailObject>();
 
   useEffect(() => {
-    setUsername(route.params.username)
-    setSearchUser(route.params.username)
-    setAvatarURL(route.params.avatar_url)
-    getData(route.params.username, route.params.avatar_url)
+    setUsername(route.params.username);
+    setSearchUser(route.params.username);
+    setAvatarURL(route.params.avatar_url);
+    getData(route.params.username, route.params.avatar_url);
   }, [route]);
 
   function getData(name: string, url: string) {
     setLoading(true);
+    console.log(url);
     Services.getUserDetails(name)
       .then((response: any) => {
         setLoading(false);
@@ -39,7 +49,8 @@ const UserDetails = ({ route }: Props) => {
         } else {
           setErrorMsg('Nothing Found!');
         }
-      }).catch((error: any) => {
+      })
+      .catch(() => {
         setLoading(false);
         setErrorMsg('Something is wrong with the server!');
       });
@@ -53,7 +64,7 @@ const UserDetails = ({ route }: Props) => {
         <Text>{errorMsg}</Text>
       ) : (
         <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
+          contentContainerStyle={styles.flexGrow}
           showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl
@@ -63,11 +74,8 @@ const UserDetails = ({ route }: Props) => {
           }>
           <>
             <View style={styles.carditem}>
-              <View style={{ flexDirection: 'row' }}>
-                <FastImageLoad
-                  style={styles.iconImg}
-                  uri={avatar_url}
-                />
+              <View style={styles.flexDirectionRow}>
+                <FastImageLoad style={styles.iconImg} uri={avatar_url} />
                 <View
                   style={
                     aObj?.name == null
@@ -75,12 +83,10 @@ const UserDetails = ({ route }: Props) => {
                       : styles.cardData
                   }>
                   <Text style={styles.textblue}>{aObj?.name}</Text>
-                  <View style={{ flexDirection: 'row' }}>
+                  <View style={styles.flexDirectionRow}>
                     <Text style={styles.textblack}>{aObj?.bio}</Text>
                   </View>
-                  <Text style={styles.textblack}>
-                    {aObj?.location}
-                  </Text>
+                  <Text style={styles.textblack}>{aObj?.location}</Text>
                 </View>
               </View>
               {aObj?.email != null ? (
@@ -90,7 +96,16 @@ const UserDetails = ({ route }: Props) => {
                     source={require('../assets/images/email96.png')}
                   />
                   <TouchableOpacity
-                    onPress={() => Linking.openURL('mailto:' + aObj.email + '?subject=' + Constants.APP_NAME + '&body=' + `Hi ${username},\n\nThanks & Regards,\n\n`)}>
+                    onPress={() =>
+                      Linking.openURL(
+                        'mailto:' +
+                          aObj.email +
+                          '?subject=' +
+                          Constants.APP_NAME +
+                          '&body=' +
+                          `Hi ${username},\n\nThanks & Regards,\n\n`,
+                      )
+                    }>
                     <Text style={styles.textblack}>{aObj.email}</Text>
                   </TouchableOpacity>
                 </View>
@@ -101,8 +116,7 @@ const UserDetails = ({ route }: Props) => {
                     style={styles.iconSize}
                     source={require('../assets/images/info80.png')}
                   />
-                  <TouchableOpacity
-                    onPress={() => Linking.openURL(aObj.blog)}>
+                  <TouchableOpacity onPress={() => Linking.openURL(aObj.blog)}>
                     <Text style={styles.textblack}>{aObj.blog}</Text>
                   </TouchableOpacity>
                 </View>
@@ -113,7 +127,8 @@ const UserDetails = ({ route }: Props) => {
                   source={require('../assets/images/create80.png')}
                 />
                 <Text style={styles.textblack}>
-                  Joined at : {moment(aObj?.created_at).format("DD:MM:YYYY HH:mm A")}
+                  Joined at :{' '}
+                  {moment(aObj?.created_at).format('DD:MM:YYYY HH:mm A')}
                 </Text>
               </View>
               <View style={styles.rowData}>
@@ -122,11 +137,12 @@ const UserDetails = ({ route }: Props) => {
                   source={require('../assets/images/clock80.png')}
                 />
                 <Text style={styles.textblack}>
-                  Updated at : {moment(aObj?.updated_at).format("DD:MM:YYYY HH:mm A")}
+                  Updated at :{' '}
+                  {moment(aObj?.updated_at).format('DD:MM:YYYY HH:mm A')}
                 </Text>
               </View>
             </View>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={styles.flexDirectionRow}>
               <TouchableOpacity
                 onPress={() => openDetails('f', aObj?.followers)}
                 style={styles.carditem}>
@@ -152,15 +168,11 @@ const UserDetails = ({ route }: Props) => {
                 </View>
               </TouchableOpacity>
             </View>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={styles.flexDirectionRow}>
               <TouchableOpacity
-                onPress={() =>
-                  openDetails('g', aObj?.public_gists)
-                }
+                onPress={() => openDetails('g', aObj?.public_gists)}
                 style={styles.carditem}>
-                <Text style={styles.textCount}>
-                  {aObj?.public_gists}
-                </Text>
+                <Text style={styles.textCount}>{aObj?.public_gists}</Text>
                 <View style={styles.imgtxt}>
                   <Image
                     style={styles.iconSize}
@@ -170,13 +182,9 @@ const UserDetails = ({ route }: Props) => {
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() =>
-                  openDetails('r', aObj?.public_repos)
-                }
+                onPress={() => openDetails('r', aObj?.public_repos)}
                 style={styles.carditem}>
-                <Text style={styles.textCount}>
-                  {aObj?.public_repos}
-                </Text>
+                <Text style={styles.textCount}>{aObj?.public_repos}</Text>
                 <View style={styles.imgtxt}>
                   <Image
                     style={styles.iconSize}
@@ -193,48 +201,47 @@ const UserDetails = ({ route }: Props) => {
   );
 
   function openDetails(screen: string, count: any) {
-    if (count != null && count != 0) {
+    if (count != null && count !== 0) {
       if (screen === 'r') {
         navigation.dispatch(
           CommonActions.navigate({
             name: Constants.NAVIGATE_SCREEN.Repositories,
             params: {
-              username: username
+              username: username,
             },
-          })
+          }),
         );
       } else if (screen === 'g') {
         navigation.dispatch(
           CommonActions.navigate({
             name: Constants.NAVIGATE_SCREEN.PublicGist,
             params: {
-              username: username
+              username: username,
             },
-          })
+          }),
         );
       } else if (screen === 'f') {
         navigation.dispatch(
           CommonActions.navigate({
             name: Constants.NAVIGATE_SCREEN.Follower,
             params: {
-              username: username
+              username: username,
             },
-          })
+          }),
         );
       } else if (screen === 'o') {
         navigation.dispatch(
           CommonActions.navigate({
             name: Constants.NAVIGATE_SCREEN.Following,
             params: {
-              username: username
+              username: username,
             },
-          })
+          }),
         );
       }
     }
   }
-
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -255,7 +262,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingVertical: 4,
     paddingHorizontal: 20,
-    flexGrow: 1
+    flexGrow: 1,
   },
   cardDataMinHight: {
     flexDirection: 'column',
@@ -287,7 +294,7 @@ const styles = StyleSheet.create({
   iconImg: {
     width: 120,
     height: 120,
-    marginBottom: 8
+    marginBottom: 8,
   },
   textCount: {
     fontSize: 20,
@@ -298,6 +305,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingTop: 4,
     justifyContent: 'center',
+  },
+  flexGrow: {
+    flexGrow: 1,
+  },
+  flexDirectionRow: {
+    flexDirection: 'row',
   },
 });
 

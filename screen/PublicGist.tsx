@@ -1,25 +1,29 @@
-
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  Linking, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View
+  Linking,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Services from '../api/Services';
 import Constants from '../app/Constants';
 import Loading from '../components/Loading';
-import { GistItem, Props } from '../model/models';
+import {GistItem, Props} from '../model/models';
 
-const PublicGist = ({ route }: Props) => {
+const PublicGist = ({route}: Props) => {
   const [isLoading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
   const [username, setUsername] = useState('');
   const [aList, setList] = useState<GistItem[]>([]);
 
   useEffect(() => {
-    setUsername(route.params.username)
+    setUsername(route.params.username);
     getData(route.params.username);
   }, [route]);
-
 
   function getData(name: string) {
     Services.getUserGist(name)
@@ -31,7 +35,8 @@ const PublicGist = ({ route }: Props) => {
         } else {
           setErrorMsg('Nothing Found!');
         }
-      }).catch((error: any) => {
+      })
+      .catch(() => {
         setLoading(false);
         setErrorMsg('Something is wrong with the server!');
       });
@@ -58,31 +63,23 @@ const PublicGist = ({ route }: Props) => {
               onPress={() => Linking.openURL(item.html_url)}>
               <View style={styles.carditem}>
                 {item.description && item.description.length > 1 ? (
-                  <Text style={styles.titleText}>
-                    {item.description}
-                  </Text>
-                ) : <Text style={styles.textblack}>
-                  NA
-                </Text>}
+                  <Text style={styles.titleText}>{item.description}</Text>
+                ) : (
+                  <Text style={styles.textblack}>NA</Text>
+                )}
                 <Text style={styles.textblack}>
-                  Updated at : {moment(item.updated_at).format("DD:MM:YYYY HH:mm A")}
+                  Updated at :{' '}
+                  {moment(item.updated_at).format('DD:MM:YYYY HH:mm A')}
                 </Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'stretch',
-                  }}>
-                </View>
+                <View style={styles.emptySpace} />
               </View>
             </TouchableOpacity>
-
           ))}
         </ScrollView>
       )}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -106,7 +103,12 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: 'white',
     borderRadius: 5,
-  }
+  },
+  emptySpace: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'stretch',
+  },
 });
 
 export default PublicGist;
