@@ -121,10 +121,14 @@ export class Home extends React.Component<Props, State> {
           <View style={styles.center}>
             {this.state.isLoading ? (
               <Loading />
-            ) : this.state.aList && this.state.aList.length > 0 ? (
-              this.showList()
             ) : (
-              <Text>{this.state.errorMsg}</Text>
+              [
+                this.state.aList && this.state.aList.length > 0 ? (
+                  this.showList()
+                ) : (
+                  <Text>{this.state.errorMsg}</Text>
+                ),
+              ]
             )}
           </View>
         </View>
@@ -162,9 +166,15 @@ export class Home extends React.Component<Props, State> {
           <TouchableOpacity
             key={index}
             onPress={() => this.openDetails(item.login, item.avatar_url)}>
-            <View style={styles.carditem}>
-              <FastImageLoad style={styles.iconImg} uri={item.avatar_url} />
-              <Text style={styles.login}>{item.login}</Text>
+            <View key={'card' + index} style={styles.carditem}>
+              <FastImageLoad
+                key={'image' + index}
+                style={styles.iconImg}
+                uri={item.avatar_url}
+              />
+              <Text key={'test' + index} style={styles.login}>
+                {item.login}
+              </Text>
             </View>
           </TouchableOpacity>
         ))}

@@ -46,36 +46,40 @@ const PublicGist = ({route}: Props) => {
     <View style={styles.container}>
       {isLoading ? (
         <Loading />
-      ) : aList === undefined ? (
-        <Text>{errorMsg}</Text>
       ) : (
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl
-              refreshing={isLoading}
-              onRefresh={() => getData(username)}
-            />
-          }>
-          {aList.map((item: GistItem, index: number) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => Linking.openURL(item.html_url)}>
-              <View style={styles.carditem}>
-                {item.description && item.description.length > 1 ? (
-                  <Text style={styles.titleText}>{item.description}</Text>
-                ) : (
-                  <Text style={styles.textblack}>NA</Text>
-                )}
-                <Text style={styles.textblack}>
-                  Updated at :{' '}
-                  {moment(item.updated_at).format('DD:MM:YYYY HH:mm A')}
-                </Text>
-                <View style={styles.emptySpace} />
-              </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+        [
+          aList === undefined ? (
+            <Text>{errorMsg}</Text>
+          ) : (
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              refreshControl={
+                <RefreshControl
+                  refreshing={isLoading}
+                  onRefresh={() => getData(username)}
+                />
+              }>
+              {aList.map((item: GistItem, index: number) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => Linking.openURL(item.html_url)}>
+                  <View style={styles.carditem}>
+                    {item.description && item.description.length > 1 ? (
+                      <Text style={styles.titleText}>{item.description}</Text>
+                    ) : (
+                      <Text style={styles.textblack}>NA</Text>
+                    )}
+                    <Text style={styles.textblack}>
+                      Updated at :{' '}
+                      {moment(item.updated_at).format('DD:MM:YYYY HH:mm A')}
+                    </Text>
+                    <View style={styles.emptySpace} />
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          ),
+        ]
       )}
     </View>
   );

@@ -60,142 +60,151 @@ const UserDetails = ({route}: Props) => {
     <View style={styles.container}>
       {isLoading ? (
         <Loading />
-      ) : aObj === null ? (
-        <Text>{errorMsg}</Text>
       ) : (
-        <ScrollView
-          contentContainerStyle={styles.flexGrow}
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl
-              refreshing={isLoading}
-              onRefresh={() => getData(username, avatar_url)}
-            />
-          }>
-          <>
-            <View style={styles.carditem}>
-              <View style={styles.flexDirectionRow}>
-                <FastImageLoad style={styles.iconImg} uri={avatar_url} />
-                <View
-                  style={
-                    aObj?.name == null
-                      ? styles.cardDataMinHight
-                      : styles.cardData
-                  }>
-                  <Text style={styles.textblue}>{aObj?.name}</Text>
+        [
+          aObj === null ? (
+            <Text>{errorMsg}</Text>
+          ) : (
+            <ScrollView
+              contentContainerStyle={styles.flexGrow}
+              showsVerticalScrollIndicator={false}
+              refreshControl={
+                <RefreshControl
+                  refreshing={isLoading}
+                  onRefresh={() => getData(username, avatar_url)}
+                />
+              }>
+              <>
+                <View style={styles.carditem}>
                   <View style={styles.flexDirectionRow}>
-                    <Text style={styles.textblack}>{aObj?.bio}</Text>
+                    <FastImageLoad style={styles.iconImg} uri={avatar_url} />
+                    <View
+                      style={[
+                        aObj?.name == null
+                          ? styles.cardDataMinHight
+                          : styles.cardData,
+                      ]}>
+                      <Text style={styles.textblue}>{aObj?.name}</Text>
+                      <View style={styles.flexDirectionRow}>
+                        <Text style={styles.textblack}>{aObj?.bio}</Text>
+                      </View>
+                      <Text style={styles.textblack}>{aObj?.location}</Text>
+                    </View>
                   </View>
-                  <Text style={styles.textblack}>{aObj?.location}</Text>
+                  {[
+                    aObj?.email != null ? (
+                      <View style={styles.rowData}>
+                        <Image
+                          style={styles.iconSize}
+                          source={require('../assets/images/email96.png')}
+                        />
+                        <TouchableOpacity
+                          onPress={() =>
+                            Linking.openURL(
+                              'mailto:' +
+                                aObj.email +
+                                '?subject=' +
+                                Constants.APP_NAME +
+                                '&body=' +
+                                `Hi ${username},\n\nThanks & Regards,\n\n`,
+                            )
+                          }>
+                          <Text style={styles.textblack}>{aObj.email}</Text>
+                        </TouchableOpacity>
+                      </View>
+                    ) : null,
+                  ]}
+                  {[
+                    aObj?.blog ? (
+                      <View style={styles.rowData}>
+                        <Image
+                          style={styles.iconSize}
+                          source={require('../assets/images/info80.png')}
+                        />
+                        <TouchableOpacity
+                          onPress={() => Linking.openURL(aObj.blog)}>
+                          <Text style={styles.textblack}>{aObj.blog}</Text>
+                        </TouchableOpacity>
+                      </View>
+                    ) : null,
+                  ]}
+                  <View style={styles.rowData}>
+                    <Image
+                      style={styles.iconSize}
+                      source={require('../assets/images/create80.png')}
+                    />
+                    <Text style={styles.textblack}>
+                      Joined at :{' '}
+                      {moment(aObj?.created_at).format('DD:MM:YYYY HH:mm A')}
+                    </Text>
+                  </View>
+                  <View style={styles.rowData}>
+                    <Image
+                      style={styles.iconSize}
+                      source={require('../assets/images/clock80.png')}
+                    />
+                    <Text style={styles.textblack}>
+                      Updated at :{' '}
+                      {moment(aObj?.updated_at).format('DD:MM:YYYY HH:mm A')}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-              {aObj?.email != null ? (
-                <View style={styles.rowData}>
-                  <Image
-                    style={styles.iconSize}
-                    source={require('../assets/images/email96.png')}
-                  />
+                <View style={styles.flexDirectionRow}>
                   <TouchableOpacity
-                    onPress={() =>
-                      Linking.openURL(
-                        'mailto:' +
-                          aObj.email +
-                          '?subject=' +
-                          Constants.APP_NAME +
-                          '&body=' +
-                          `Hi ${username},\n\nThanks & Regards,\n\n`,
-                      )
-                    }>
-                    <Text style={styles.textblack}>{aObj.email}</Text>
+                    onPress={() => openDetails('f', aObj?.followers)}
+                    style={styles.carditem}>
+                    <Text style={styles.textCount}>{aObj?.followers}</Text>
+                    <View style={styles.imgtxt}>
+                      <Image
+                        style={styles.iconSize}
+                        source={require('../assets/images/adduser80.png')}
+                      />
+                      <Text>{Constants.TEXT.Follower}</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => openDetails('o', aObj?.following)}
+                    style={styles.carditem}>
+                    <Text style={styles.textCount}>{aObj?.following}</Text>
+                    <View style={styles.imgtxt}>
+                      <Image
+                        style={styles.iconSize}
+                        source={require('../assets/images/checkeduser80.png')}
+                      />
+                      <Text>{Constants.TEXT.Following}</Text>
+                    </View>
                   </TouchableOpacity>
                 </View>
-              ) : null}
-              {aObj?.blog ? (
-                <View style={styles.rowData}>
-                  <Image
-                    style={styles.iconSize}
-                    source={require('../assets/images/info80.png')}
-                  />
-                  <TouchableOpacity onPress={() => Linking.openURL(aObj.blog)}>
-                    <Text style={styles.textblack}>{aObj.blog}</Text>
+                <View style={styles.flexDirectionRow}>
+                  <TouchableOpacity
+                    onPress={() => openDetails('g', aObj?.public_gists)}
+                    style={styles.carditem}>
+                    <Text style={styles.textCount}>{aObj?.public_gists}</Text>
+                    <View style={styles.imgtxt}>
+                      <Image
+                        style={styles.iconSize}
+                        source={require('../assets/images/code80.png')}
+                      />
+                      <Text>{Constants.TEXT.PublicGist}</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => openDetails('r', aObj?.public_repos)}
+                    style={styles.carditem}>
+                    <Text style={styles.textCount}>{aObj?.public_repos}</Text>
+                    <View style={styles.imgtxt}>
+                      <Image
+                        style={styles.iconSize}
+                        source={require('../assets/images/repository80.png')}
+                      />
+                      <Text>{Constants.TEXT.Repositories}</Text>
+                    </View>
                   </TouchableOpacity>
                 </View>
-              ) : null}
-              <View style={styles.rowData}>
-                <Image
-                  style={styles.iconSize}
-                  source={require('../assets/images/create80.png')}
-                />
-                <Text style={styles.textblack}>
-                  Joined at :{' '}
-                  {moment(aObj?.created_at).format('DD:MM:YYYY HH:mm A')}
-                </Text>
-              </View>
-              <View style={styles.rowData}>
-                <Image
-                  style={styles.iconSize}
-                  source={require('../assets/images/clock80.png')}
-                />
-                <Text style={styles.textblack}>
-                  Updated at :{' '}
-                  {moment(aObj?.updated_at).format('DD:MM:YYYY HH:mm A')}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.flexDirectionRow}>
-              <TouchableOpacity
-                onPress={() => openDetails('f', aObj?.followers)}
-                style={styles.carditem}>
-                <Text style={styles.textCount}>{aObj?.followers}</Text>
-                <View style={styles.imgtxt}>
-                  <Image
-                    style={styles.iconSize}
-                    source={require('../assets/images/adduser80.png')}
-                  />
-                  <Text>{Constants.TEXT.Follower}</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => openDetails('o', aObj?.following)}
-                style={styles.carditem}>
-                <Text style={styles.textCount}>{aObj?.following}</Text>
-                <View style={styles.imgtxt}>
-                  <Image
-                    style={styles.iconSize}
-                    source={require('../assets/images/checkeduser80.png')}
-                  />
-                  <Text>{Constants.TEXT.Following}</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.flexDirectionRow}>
-              <TouchableOpacity
-                onPress={() => openDetails('g', aObj?.public_gists)}
-                style={styles.carditem}>
-                <Text style={styles.textCount}>{aObj?.public_gists}</Text>
-                <View style={styles.imgtxt}>
-                  <Image
-                    style={styles.iconSize}
-                    source={require('../assets/images/code80.png')}
-                  />
-                  <Text>{Constants.TEXT.PublicGist}</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => openDetails('r', aObj?.public_repos)}
-                style={styles.carditem}>
-                <Text style={styles.textCount}>{aObj?.public_repos}</Text>
-                <View style={styles.imgtxt}>
-                  <Image
-                    style={styles.iconSize}
-                    source={require('../assets/images/repository80.png')}
-                  />
-                  <Text>{Constants.TEXT.Repositories}</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          </>
-        </ScrollView>
+              </>
+            </ScrollView>
+          ),
+        ]
       )}
     </View>
   );

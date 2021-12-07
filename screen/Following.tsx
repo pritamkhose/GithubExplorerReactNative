@@ -49,28 +49,35 @@ const Following = ({route}: Props) => {
     <View style={styles.container}>
       {isLoading ? (
         <Loading />
-      ) : aList === undefined ? (
-        <Text>{errorMsg}</Text>
       ) : (
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl
-              refreshing={isLoading}
-              onRefresh={() => getData(searchUser)}
-            />
-          }>
-          {aList.map((item: UserLoginItem, index: number) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => openDetails(item.login, item.avatar_url)}>
-              <View style={styles.carditem}>
-                <FastImageLoad style={styles.iconImg} uri={item.avatar_url} />
-                <Text style={styles.iconText}>{item.login}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+        [
+          aList === undefined ? (
+            <Text>{errorMsg}</Text>
+          ) : (
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              refreshControl={
+                <RefreshControl
+                  refreshing={isLoading}
+                  onRefresh={() => getData(searchUser)}
+                />
+              }>
+              {aList.map((item: UserLoginItem, index: number) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => openDetails(item.login, item.avatar_url)}>
+                  <View style={styles.carditem}>
+                    <FastImageLoad
+                      style={styles.iconImg}
+                      uri={item.avatar_url}
+                    />
+                    <Text style={styles.iconText}>{item.login}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          ),
+        ]
       )}
     </View>
   );
