@@ -58,3 +58,14 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+# test
+__snapshots__/
+*.js.snap
+coverage/
+test-report.html
+report.html
+
+# Sonar
+/.scannerwork
+sonar-project.properties

@@ -17,7 +17,7 @@
     "ios-clean": "cd ios && xcodebuild && cd ../",
     "node-clean": "rm -rf node_modules && rm yarn.lock && yarn install",
     "start": "react-native start",
-    "test": "jest",
+    "test": "jest --updateSnapshot --coverage",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
@@ -40,16 +40,20 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@babel/preset-env": "^7.16.4",
     "@babel/runtime": "^7.12.5",
     "@react-native-community/eslint-config": "^2.0.0",
+    "@types/enzyme": "^3.10.10",
     "@types/jest": "^26.0.23",
     "@types/react-native": "^0.65.0",
     "@types/react-test-renderer": "^17.0.1",
-    "babel-jest": "^26.6.3",
+    "babel-jest": "^27.4.2",
+    "enzyme": "^3.11.0",
     "eslint": "^7.14.0",
     "jest": "^26.6.3",
     "metro-react-native-babel-preset": "^0.66.2",
     "react-test-renderer": "17.0.2",
+    "ts-jest": "^27.0.7",
     "typescript": "^3.8.3"
   },
   "resolutions": {

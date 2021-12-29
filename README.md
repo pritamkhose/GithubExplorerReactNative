@@ -91,6 +91,8 @@ Install npm dependencies
 npm i react-native-splash-screen
 npm i hammerjs
 npm i react-native-reanimated react-native-gesture-handler react-native-screens react-native-safe-area-context @react-native-community/masked-view react-navigation react-navigation-stack
+
+yarn add @babel/preset-env --dev
 ```
 
 IDE setup
@@ -102,3 +104,31 @@ downloaded from [Xcode](https://developer.apple.com/xcode/).
 Upcoming features
 -----------------
 Updates will include many more feature and architectural pattern.
+
+
+Sonar command
+--------------
+```sh
+
+cd /sonarqube/bin/macosx-universal-64
+
+sh sonar.sh console
+
+http://localhost:9000/
+
+
+echo $JAVA_HOME 
+
+Set path in sonar wrapper.config 
+wrapper.java.command=/Library/Java/JavaVirtualMachines/jdk-17.0.1.jdk/Contents/Home/bin/java
+
+
+in env or bash file
+export PATH=/Users/pritamkhose/Documents/code/sonar-scanner/bin:$PATH
+
+sonar-scanner \
+  -Dsonar.projectKey=GithubExplorerReactNative \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.login=75d4adfa00f787ea2a2791cdab2fc16f9a47b50a
+```
