@@ -17,6 +17,8 @@ const Constants = {
     Repositories: ' Repositories',
     PublicGist: ' Public Gist',
   },
+  NothingFound: 'Nothing Found!',
+  WentWrong: 'Something is wrong with the server!',
 };
 
 export default Constants;

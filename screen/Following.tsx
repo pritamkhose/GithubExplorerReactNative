@@ -4,7 +4,6 @@ import React, {useContext, useEffect, useState} from 'react';
 import {
   RefreshControl,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -15,6 +14,7 @@ import Constants from '../app/Constants';
 import FastImageLoad from '../components/FastImageLoad';
 import Loading from '../components/Loading';
 import {Props, UserLoginItem} from '../model/models';
+import styles from './Styles.styles';
 
 const Following = ({route}: Props) => {
   const navigation = useNavigation();
@@ -36,48 +36,41 @@ const Following = ({route}: Props) => {
           setErrorMsg('');
           setList(response);
         } else {
-          setErrorMsg('Nothing Found!');
+          setErrorMsg(Constants.NothingFound);
         }
       })
       .catch(() => {
         setLoading(false);
-        setErrorMsg('Something is wrong with the server!');
+        setErrorMsg(Constants.WentWrong);
       });
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.containerCenter}>
       {isLoading ? (
         <Loading />
+      ) : aList === undefined ? (
+        <Text>{errorMsg}</Text>
       ) : (
-        [
-          aList === undefined ? (
-            <Text>{errorMsg}</Text>
-          ) : (
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              refreshControl={
-                <RefreshControl
-                  refreshing={isLoading}
-                  onRefresh={() => getData(searchUser)}
-                />
-              }>
-              {aList.map((item: UserLoginItem, index: number) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => openDetails(item.login, item.avatar_url)}>
-                  <View style={styles.carditem}>
-                    <FastImageLoad
-                      style={styles.iconImg}
-                      uri={item.avatar_url}
-                    />
-                    <Text style={styles.iconText}>{item.login}</Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          ),
-        ]
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={isLoading}
+              onRefresh={() => getData(searchUser)}
+            />
+          }>
+          {aList.map((item: UserLoginItem, index: number) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => openDetails(item.login, item.avatar_url)}>
+              <View style={styles.carditem}>
+                <FastImageLoad style={styles.iconImg} uri={item.avatar_url} />
+                <Text style={styles.iconText}>{item.login}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       )}
     </View>
   );
@@ -95,31 +88,5 @@ const Following = ({route}: Props) => {
     );
   }
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 4,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  carditem: {
-    flexDirection: 'row',
-    marginVertical: 5,
-    padding: 5,
-    backgroundColor: 'white',
-    borderRadius: 5,
-  },
-  iconImg: {
-    width: 50,
-    height: 50,
-  },
-  iconText: {
-    padding: 10,
-    color: 'black',
-    fontSize: 16,
-  },
-});
 
 export default Following;

@@ -5,7 +5,6 @@ import {
   Keyboard,
   RefreshControl,
   ScrollView,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
@@ -15,6 +14,7 @@ import Services from '../api/Services';
 import Constants from '../app/Constants';
 import FastImageLoad from '../components/FastImageLoad';
 import Loading from '../components/Loading';
+import styles from './Styles.styles';
 
 export interface Props {
   navigation: any;
@@ -78,7 +78,7 @@ export class Home extends React.Component<Props, State> {
         this.setState({
           isLoading: false,
           aList: [],
-          errorMsg: 'Something is wrong with the server!',
+          errorMsg: Constants.WentWrong,
         });
       });
   }
@@ -121,14 +121,33 @@ export class Home extends React.Component<Props, State> {
           <View style={styles.center}>
             {this.state.isLoading ? (
               <Loading />
+            ) : this.state.aList && this.state.aList.length > 0 ? (
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={this.state.isLoading}
+                    onRefresh={this._onRefresh}
+                  />
+                }>
+                {this.state.aList.map((item: UserItem, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() =>
+                      this.openDetails(item.login, item.avatar_url)
+                    }>
+                    <View style={styles.carditem}>
+                      <FastImageLoad
+                        style={styles.iconImg}
+                        uri={item.avatar_url}
+                      />
+                      <Text style={styles.login}>{item.login}</Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
             ) : (
-              [
-                this.state.aList && this.state.aList.length > 0 ? (
-                  this.showList()
-                ) : (
-                  <Text>{this.state.errorMsg}</Text>
-                ),
-              ]
+              <Text>{this.state.errorMsg}</Text>
             )}
           </View>
         </View>
@@ -151,82 +170,6 @@ export class Home extends React.Component<Props, State> {
   _onRefresh = () => {
     this.getData();
   };
-
-  showList() {
-    return (
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.isLoading}
-            onRefresh={this._onRefresh}
-          />
-        }>
-        {this.state.aList.map((item: UserItem, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => this.openDetails(item.login, item.avatar_url)}>
-            <View key={'card' + index} style={styles.carditem}>
-              <FastImageLoad
-                key={'image' + index}
-                style={styles.iconImg}
-                uri={item.avatar_url}
-              />
-              <Text key={'test' + index} style={styles.login}>
-                {item.login}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-    );
-  }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    flexDirection: 'column',
-  },
-  center: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  searchrow: {
-    flexDirection: 'row',
-    alignItems: 'stretch',
-  },
-  textInput: {
-    flex: 1,
-    height: 40,
-    fontSize: 18,
-    borderWidth: 0.5,
-    padding: 10,
-  },
-  iconSearchImg: {
-    width: 50,
-    height: 50,
-    marginTop: -5,
-  },
-  iconImg: {
-    width: 50,
-    height: 50,
-  },
-  carditem: {
-    flexDirection: 'row',
-    marginVertical: 5,
-    padding: 5,
-    backgroundColor: 'white',
-    borderRadius: 5,
-  },
-  login: {
-    padding: 10,
-    color: 'black',
-    fontSize: 16,
-  },
-});
 
 export default Home;
