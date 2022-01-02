@@ -51,10 +51,23 @@ jobs:
       - name: Install npm dependencies
         run: |
           npm install
-      - name: Build Android Release
+      - name: test npm dependencies
+        run: |
+          npm test
+      - name: Upload Artifact coverage
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage.zip
+          path: coverage/
+       name: Upload Artifact test result
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-result.zip
+          path: test-result/
+      - name: Build Android Release apk
         run: |
           cd android && bash ./gradlew assembleRelease --stacktrace
-      - name: Upload Artifact
+      - name: Upload Artifact apk
         uses: actions/upload-artifact@v2
         with:
           name: app-release.apk
