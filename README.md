@@ -126,9 +126,13 @@ wrapper.java.command=/Library/Java/JavaVirtualMachines/jdk-17.0.1.jdk/Contents/H
 in env or bash file
 export PATH=/Users/pritamkhose/Documents/code/sonar-scanner/bin:$PATH
 
+sonar-scanner
+or 
 sonar-scanner \
   -Dsonar.projectKey=GithubExplorerReactNative \
   -Dsonar.sources=. \
   -Dsonar.host.url=http://localhost:9000 \
   -Dsonar.login=75d4adfa00f787ea2a2791cdab2fc16f9a47b50a
 ```
+
+* [Sonarqube coverage](https://stackoverflow.com/questions/57799910/sonarqube-coverage-0-in-react-js)

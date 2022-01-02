@@ -17,7 +17,7 @@
     "ios-clean": "cd ios && xcodebuild && cd ../",
     "node-clean": "rm -rf node_modules && rm yarn.lock && yarn install",
     "start": "react-native start",
-    "test": "jest --updateSnapshot --coverage",
+    "test": "jest --updateSnapshot --coverage --reporters default jest-stare",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
@@ -49,8 +49,10 @@
     "@types/react-test-renderer": "^17.0.1",
     "babel-jest": "^27.4.2",
     "enzyme": "^3.11.0",
+    "enzyme-adapter-react-15": "^1.4.3",
     "eslint": "^7.14.0",
     "jest": "^26.6.3",
+    "jest-stare": "^2.3.0",
     "metro-react-native-babel-preset": "^0.66.2",
     "react-test-renderer": "17.0.2",
     "ts-jest": "^27.0.7",
@@ -68,6 +70,19 @@
       "jsx",
       "json",
       "node"
+    ],
+    "setupFiles": [
+      "<rootDir>/jest-setup.js"
     ]
+  },
+  "jest-stare": {
+    "resultDir": "test-result",
+    "reportTitle": "test-result",
+    "additionalResultsProcessors": [
+      "jest-junit"
+    ],
+    "coverageLink": "../coverage/lcov-report/index.html",
+    "hidePassing": true,
+    "hidePending": true
   }
 }

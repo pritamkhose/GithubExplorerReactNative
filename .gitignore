@@ -65,6 +65,7 @@ __snapshots__/
 coverage/
 test-report.html
 report.html
+test-result/
 
 # Sonar
 /.scannerwork
