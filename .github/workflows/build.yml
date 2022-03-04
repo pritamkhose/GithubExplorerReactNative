@@ -1,71 +1,39 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://github.com/realabbas/Github-Actions-React-Native
-# https://blog.usejournal.com/automate-react-native-builds-with-github-actions-af54212d26dc
-# https://blog.logrocket.com/react-native-ci-cd-using-github-actions/
-# https://sonarcloud.io/project/configuration?analysisMode=GitHubActions&id=pritamkhose_GithubExplorerReactNative
-
-name: react-native-android-build-apk
+name: React Native Android apk CI
 
 on:
   push:
     branches: [ master ]
   pull_request:
-    # branches: [ master ]
+    branches: [ master ]
     types: [opened, synchronize, reopened]
 
 jobs:
-  install-and-test:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Install npm dependencies
-        run: |
-          npm install
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-      # Setup JDK
-      - name: set up JDK 11
+    - uses: actions/checkout@v2
+    - name: Install npm dependencies
+      run: |
+       npm install
+    - name: Run a one-line script
+      run: echo Hello, world!
+    - name: set up JDK 11
       uses: actions/setup-java@v2
       with:
         java-version: '11'
         distribution: 'temurin'
         cache: gradle
 
-      - name: test npm dependencies
-        run: |
-          npm test
-      - name: Upload Artifact coverage
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage.zip
-          path: coverage/
-          retention-days: 1
-      - name: Upload Artifact test result
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-result.zip
-          path: test-result/
-          retention-days: 1
-
-      - name: eslint report
-        run: |
-          npm run lintreport
-      - name: Upload Artifact lint report
-        uses: actions/upload-artifact@v2
-        with:
-          name: eslintreport.html
-          path: eslintreport.html
-          retention-days: 1
-
-      - name: Build Android Release apk
-        run: |
+    - name: Build Android Release apk
+      run: |
           cd android && bash ./gradlew assembleRelease --stacktrace
-      - name: Upload Artifact apk
-        uses: actions/upload-artifact@v2
-        with:
-          name: app-release.apk
-          path: android/app/build/outputs/apk/release/app-release.apk
+    - name: Upload Artifact release apk
+      uses: actions/upload-artifact@v2
+      with:
+        name: app-release.apk
+        path: android/app/build/outputs/apk/release/app-release.apk
+        retention-days: 5
 
   sonarcloud:
     name: SonarCloud
@@ -79,4 +47,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.SONAR_GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
