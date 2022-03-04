@@ -25,10 +25,47 @@ jobs:
       - name: Run a one-line script
         run: echo Hello, world!
       # Setup JDK
-      - name: set up JDK 1.8
-        uses: actions/setup-java@v1
+      - name: set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: gradle
+
+      - name: test npm dependencies
+        run: |
+          npm test
+      - name: Upload Artifact coverage
+        uses: actions/upload-artifact@v2
         with:
-          java-version: 1.8
+          name: coverage.zip
+          path: coverage/
+          retention-days: 1
+      - name: Upload Artifact test result
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-result.zip
+          path: test-result/
+          retention-days: 1
+
+      - name: eslint report
+        run: |
+          npm run lintreport
+      - name: Upload Artifact lint report
+        uses: actions/upload-artifact@v2
+        with:
+          name: eslintreport.html
+          path: eslintreport.html
+          retention-days: 1
+
+      - name: Build Android Release apk
+        run: |
+          cd android && bash ./gradlew assembleRelease --stacktrace
+      - name: Upload Artifact apk
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release.apk
+          path: android/app/build/outputs/apk/release/app-release.apk
 
   sonarcloud:
     name: SonarCloud
@@ -43,32 +80,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.SONAR_GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  build-android:
-    needs: install-and-test
-    runs-on: ubuntu-latest
-    steps: 
-      - uses: actions/checkout@v2
-      - name: Install npm dependencies
-        run: |
-          npm install
-      - name: test npm dependencies
-        run: |
-          npm test
-      - name: Upload Artifact coverage
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage.zip
-          path: coverage/
-       name: Upload Artifact test result
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-result.zip
-          path: test-result/
-      - name: Build Android Release apk
-        run: |
-          cd android && bash ./gradlew assembleRelease --stacktrace
-      - name: Upload Artifact apk
-        uses: actions/upload-artifact@v2
-        with:
-          name: app-release.apk
-          path: android/app/build/outputs/apk/release/app-release.apk
