@@ -49,7 +49,8 @@ const Navigation = () => {
                       },
                       {text: 'OK', onPress: () => doExit()},
                     ]);
-                  }}>
+                  }}
+                >
                   <Image
                     style={styles.logoutIcon}
                     source={require('../assets/images/logout.png')}
@@ -58,7 +59,8 @@ const Navigation = () => {
               ) : null}
             </>
           ),
-        }}>
+        }}
+      >
         <Stack.Screen
           name={Constants.NAVIGATE_SCREEN.Home}
           component={HomeScreen}

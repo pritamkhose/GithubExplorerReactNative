@@ -1,7 +1,7 @@
-import React from 'react';
+/* import React from 'react';
 import renderer from 'react-test-renderer';
 import Follower from './Follower';
-import {shallow} from 'enzyme';
+// import {shallow} from 'enzyme';
 
 test('renders correctly show', () => {
   const _getComponent = () => {
@@ -35,3 +35,5 @@ it('renders a using Snapshots', () => {
   component = _getComponent({isLoading: false, repos});
   expect(component).toMatchSnapshot();
 });
+
+ */

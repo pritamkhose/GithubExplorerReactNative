@@ -1,20 +1,20 @@
 /* eslint-disable no-undef */
 
 // Mock out all top level functions, such as get, put, delete and post:
-// jest.mock('axios');
+jest.mock('axios');
 
 // https://stackoverflow.com/questions/63973960/mocking-axios-with-jest-throws-error-cannot-read-property-interceptors-of-und
 
-jest.mock('axios', () => {
-  return {
-    create: jest.fn(),
-    get: jest.fn(),
-    interceptors: {
-      request: {use: jest.fn(), eject: jest.fn()},
-      response: {use: jest.fn(), eject: jest.fn()},
-    },
-  };
-});
+// jest.mock('axios', () => {
+//   return {
+//     create: jest.fn(),
+//     get: jest.fn(),
+//     interceptors: {
+//       request: {use: jest.fn(), eject: jest.fn()},
+//       response: {use: jest.fn(), eject: jest.fn()},
+//     },
+//   };
+// });
 
 // https://reactnavigation.org/docs/testing/
 import 'react-native-gesture-handler/jestSetup';

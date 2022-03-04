@@ -66,6 +66,7 @@ coverage/
 test-report.html
 report.html
 test-result/
+eslintreport.html
 
 # Sonar
 /.scannerwork

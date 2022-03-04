@@ -18,7 +18,9 @@
     "node-clean": "rm -rf node_modules && rm yarn.lock && yarn install",
     "start": "react-native start",
     "test": "jest --updateSnapshot --coverage --reporters default jest-stare",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lintreport" : "eslint . -f node_modules/eslint-html-reporter/reporter.js -o eslintreport.html",
+    "cleanreport" : "rm -rf coverage/ test-result/ eslintreport.html"
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.11",
@@ -50,6 +52,7 @@
     "babel-jest": "^27.4.2",
     "enzyme": "^3.11.0",
     "eslint": "^7.14.0",
+    "eslint-html-reporter": "^0.7.4",
     "jest": "^26.6.3",
     "jest-stare": "^2.3.0",
     "metro-react-native-babel-preset": "^0.66.2",

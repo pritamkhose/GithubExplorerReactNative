@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import Services from '../api/Services';
+import Constants from '../app/Constants';
 import Loading from '../components/Loading';
 import {Props, RepoItem} from '../model/models';
 import styles from './Styles.styles';
@@ -55,11 +56,13 @@ const Repositories = ({route}: Props) => {
               refreshing={isLoading}
               onRefresh={() => getData(username)}
             />
-          }>
+          }
+        >
           {aList.map((item: RepoItem, index: number) => (
             <TouchableOpacity
               key={index}
-              onPress={() => Linking.openURL(item.html_url)}>
+              onPress={() => Linking.openURL(item.html_url)}
+            >
               <View style={styles.cardItemRepo}>
                 <Text style={styles.textTitle}>{item.name}</Text>
                 {item.description && item.description.length > 1 ? (

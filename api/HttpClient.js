@@ -19,7 +19,7 @@ const HttpClient = axios.create({
 // Request Wrapper with default success/error actions
 
 // Intercept all requests
-HttpClient.interceptors.request.use(
+HttpClient?.interceptors.request.use(
   config => {
     console.log(config.method.toUpperCase(), config.baseURL, config.url);
     return config;
@@ -28,7 +28,7 @@ HttpClient.interceptors.request.use(
 );
 
 // Intercept all responses
-HttpClient.interceptors.response.use(
+HttpClient?.interceptors.response.use(
   async response => {
     // TODO console.debug('Request Successful!', response);
     return response.data;

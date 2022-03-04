@@ -129,13 +129,15 @@ export class Home extends React.Component<Props, State> {
                     refreshing={this.state.isLoading}
                     onRefresh={this._onRefresh}
                   />
-                }>
+                }
+              >
                 {this.state.aList.map((item: UserItem, index) => (
                   <TouchableOpacity
                     key={index}
                     onPress={() =>
                       this.openDetails(item.login, item.avatar_url)
-                    }>
+                    }
+                  >
                     <View style={styles.carditem}>
                       <FastImageLoad
                         style={styles.iconImg}

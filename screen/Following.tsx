@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import React, {useContext, useEffect, useState} from 'react';
 import {
@@ -26,7 +25,7 @@ const Following = ({route}: Props) => {
 
   useEffect(() => {
     getData(searchUser);
-  }, [route]);
+  }, [route, searchUser]);
 
   function getData(name: string) {
     Services.getUserFollowing(name)
@@ -59,11 +58,13 @@ const Following = ({route}: Props) => {
               refreshing={isLoading}
               onRefresh={() => getData(searchUser)}
             />
-          }>
+          }
+        >
           {aList.map((item: UserLoginItem, index: number) => (
             <TouchableOpacity
               key={index}
-              onPress={() => openDetails(item.login, item.avatar_url)}>
+              onPress={() => openDetails(item.login, item.avatar_url)}
+            >
               <View style={styles.carditem}>
                 <FastImageLoad style={styles.iconImg} uri={item.avatar_url} />
                 <Text style={styles.iconText}>{item.login}</Text>

@@ -9,18 +9,18 @@ It provide feature like search User's and it's details, along with list of user'
 
 Getting Started
 ---------------
-This project uses the npm, pod, Gradle build system. To build this project, use the
-`npm install` command in [Visual Studio Code](https://code.visualstudio.com/download) or Getting Started with React native typescript project
+This project uses the npm, pod, Gradle build system. To build this project, use the `npm install` or 
+`yarn install` command in [Visual Studio Code](https://code.visualstudio.com/download) or Getting Started with React native typescript project
 ```sh
 npx react-native init GithubExplorerReactNative --template react-native-template-typescript
 ```
 
 Project command
 ---------
-To run this project, use `npm run android` or `npm run ios`.
-if need clean this project, use `npm run android-clean` or `npm run ios-clean`.
+To run this project, use `yarn run android` or `yarn run ios`.
+if need clean this project, use `yarn run android-clean` or `yarn run ios-clean`.
 
-| npm run ... | Description |
+| yarn run ... | Description |
 | --- | --- |
 | android | Run android development-mode on simulator or phone |
 | android-debug | Build android .apk with “Debug” configuration |
@@ -37,8 +37,10 @@ if need clean this project, use `npm run android-clean` or `npm run ios-clean`.
 | ios-bundle | Bundle with entry file index.ios.js |
 | ios-pod-clean | clean xcode & pod building |
 | node-clean| clean node modules |
-| test  | jest testing  |
-| lint | lint testing |
+| test  | jest test case and coverage reprot  |
+| lint | lint js file |
+| lintreport | eslint report genrator |
+| cleanreport | delete all report files |
 
 To fix cocapad pod install issue fix by command where more info [Github issue tracker](https://github.com/CocoaPods/CocoaPods/issues/10287) and [Youtube video](https://www.youtube.com/watch?v=zdv9qE4j-VU).
 ```sh
@@ -85,14 +87,18 @@ Axios references
 * [Handling errors](https://stackoverflow.com/questions/49967779/axios-handling-errors)
 
 
-Install npm dependencies
+Install yarn dependencies
 --------------
 ```sh
-npm i react-native-splash-screen
-npm i hammerjs
-npm i react-native-reanimated react-native-gesture-handler react-native-screens react-native-safe-area-context @react-native-community/masked-view react-navigation react-navigation-stack
+yarn add react-native-splash-screen
+yarn add react-native-reanimated react-native-gesture-handler react-native-screens react-native-safe-area-context @react-native-community/masked-view react-navigation react-navigation-stack
 
 yarn add @babel/preset-env --dev
+yarn add eslint-html-reporter --dev
+
+yarn add axios moment @react-native-community/netinfo 
+yarn add react-native-fast-image react-native-modal
+yarn add react-native-splash-screen
 ```
 
 IDE setup
