@@ -38,7 +38,11 @@ if need clean this project, use `yarn run android-clean` or `yarn run ios-clean`
 | ios-pod-clean | clean xcode & pod building |
 | node-clean| clean node modules |
 | test  | jest test case and coverage reprot  |
-| lint | lint js file |
+| lint | eslint js file |
+| lint:fix | fixing eslint to all js file |
+| prettier | prettier js file |
+| prettier:fix | fixing prettier to all js file |
+| format| fixing eslint & prettier to all js file |
 | lintreport | eslint report genrator |
 | cleanreport | delete all report files |
 
@@ -76,6 +80,10 @@ Libraries used
 * [App Icon Generator iOS & Android](https://appicon.co/)
 * [Colors](https://reactnative.dev/docs/colors)
 * [Android Image Asset Studio](https://developer.android.com/studio/write/image-asset-studio)
+
+Eslint
+--------------
+* [prettier-eslint](https://blog.logrocket.com/using-prettier-eslint-automate-formatting-fixing-javascript/)
 
 
 Axios references

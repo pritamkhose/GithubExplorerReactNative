@@ -19,8 +19,12 @@
     "start": "react-native start",
     "test": "jest --updateSnapshot --coverage --reporters default jest-stare",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "lintreport" : "eslint . -f node_modules/eslint-html-reporter/reporter.js -o eslintreport.html",
-    "cleanreport" : "rm -rf coverage/ test-result/ eslintreport.html"
+    "lint:fix": "npm run lint -- --fix",
+    "prettier": "npx prettier api app components model screen --check",
+    "prettier:fix": "npm run prettier -- --write",
+    "format": "npm run prettier:fix && npm run lint:fix",
+    "lintreport": "eslint . -f node_modules/eslint-html-reporter/reporter.js -o eslintreport.html",
+    "cleanreport": "rm -rf coverage/ test-result/ eslintreport.html"
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.11",
@@ -52,10 +56,13 @@
     "babel-jest": "^27.4.2",
     "enzyme": "^3.11.0",
     "eslint": "^7.14.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-html-reporter": "^0.7.4",
+    "eslint-plugin-prettier": "^4.0.0",
     "jest": "^26.6.3",
     "jest-stare": "^2.3.0",
     "metro-react-native-babel-preset": "^0.66.2",
+    "prettier": "^2.6.2",
     "react-test-renderer": "17.0.2",
     "typescript": "^3.8.3"
   },
