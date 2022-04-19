@@ -25,6 +25,7 @@ jobs:
         distribution: 'temurin'
 
     - name: eslint report
+      continue-on-error: true
       run: |
         npm run lintreport
     - name: Upload Artifact lint report
@@ -35,6 +36,7 @@ jobs:
         retention-days: 1
 
     - name: test and coverage
+      continue-on-error: true
       run: |
         npm run test
     - name: Upload Artifact coverage
