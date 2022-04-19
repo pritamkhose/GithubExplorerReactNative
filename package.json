@@ -23,7 +23,7 @@
     "prettier": "npx prettier api app components model screen --check",
     "prettier:fix": "npm run prettier -- --write",
     "format": "npm run prettier:fix && npm run lint:fix",
-    "lintreport": "eslint . -f node_modules/eslint-html-reporter/reporter.js -o eslintreport.html",
+    "lintreport": "eslint node_modules/eslint-html-reporter/reporter.js -o eslintreport.html",
     "cleanreport": "rm -rf coverage/ test-result/ eslintreport.html"
   },
   "dependencies": {
