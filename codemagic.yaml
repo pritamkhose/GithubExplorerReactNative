@@ -1,7 +1,7 @@
 workflows:
   android-workflow:
     name: Android Workflow
-    max_build_duration: 60
+    max_build_duration: 30
     instance_type: mac_mini
     environment:
       groups:
@@ -11,6 +11,7 @@ workflows:
       # Add the group environment variables in Codemagic UI (either in Application/Team variables) - https://docs.codemagic.io/variables/environment-variable-groups/
       vars:
         CM_KEYSTORE_PATH: /tmp/keystore.keystore
+        PACKAGE_NAME: "com.reactnativefirebase" # <-- Put your package name here e.g. com.domain.myapp
       node: latest
     triggering:
       events:
@@ -18,28 +19,51 @@ workflows:
         - tag
         - pull_request
       branch_patterns:
-        - pattern: release
-          include: true
+        - pattern: master
+          include: false
           source: true
+      cancel_previous_builds: true
     scripts:
-      - name: Set up local properties
-        script: echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
-      - name: Set up key.properties file for code signing
-        script: |
-          echo $CM_KEYSTORE | base64 --decode > $CM_KEYSTORE_PATH
-          cat >> "$CM_BUILD_DIR/key.properties" <<EOF
-          storePassword=$CM_KEYSTORE_PASSWORD
-          keyPassword=$CM_KEY_PASSWORD
-          keyAlias=$CM_KEY_ALIAS
-          storeFile=$CM_KEYSTORE_PATH
-          EOF          
-      - name: Build Android app
-        script: 
-          cd android && bash ./gradlew assembleRelease --stacktrace  # To generate an .abb use--> ./gradlew bundleRelease
+        - name: Hello world workflow
+          script: |
+            echo "Hello World workflow!"
+        - name: Install npm dependencies
+          script: |
+            npm install
+        - name: Set up local properties
+          script: |
+            echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
+        - name: Set up key.properties file for code signing
+          script: |
+            echo $CM_KEYSTORE | base64 --decode > $CM_KEYSTORE_PATH
+            cat >> "$CM_BUILD_DIR/key.properties" <<EOF
+            storePassword=$CM_KEYSTORE_PASSWORD
+            keyPassword=$CM_KEY_PASSWORD
+            keyAlias=$CM_KEY_ALIAS
+            storeFile=$CM_KEYSTORE_PATH
+            EOF
+        - name: eslint report
+          script: |
+            npm run lintreport
+        - name: test and coverage
+          script: |
+            npm run test
+        - name: Build Android app
+          script: |
+            cd android && bash ./gradlew assembleRelease --stacktrace  # To generate an .abb use--> ./gradlew bundleRelease
     artifacts:
-      # - app/build/outputs/**/**/*.aab
-      - app/build/outputs/**/**/*.apk
-    # publishing:
-    #   google_play:
-    #     credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-    #     track: internal
+      # - android/app/build/outputs/**/**/*.aab
+      - android/app/build/outputs/**/**/*.apk
+      - eslintreport.html
+      - coverage/
+    publishing:
+    # See the following link for details about email publishing - https://docs.codemagic.io/yaml-publishing/email
+      email:
+        recipients:
+        - pritamkhose1@gmail.com
+        notify:
+          success: true # To not receive a notification when a build succeeds
+          failure: true # To not receive a notification when a build fails
+    # google_play:
+    #   credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+    #   track: internal
