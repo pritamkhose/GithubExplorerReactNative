@@ -12,7 +12,7 @@ workflows:
       vars:
         CM_KEYSTORE_PATH: /tmp/keystore.keystore
         PACKAGE_NAME: "com.reactnativefirebase" # <-- Put your package name here e.g. com.domain.myapp
-      node: latest
+      node: 16.15.1 #latest
     triggering:
       events:
         - push
