@@ -50,7 +50,7 @@ before_install:
 
 before_script:
   - npm install
-  - chmod +x gradlew
+  - chmod +x ./android/gradlew
 #   - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
 #   - emulator -avd test -no-audio -no-window &
 #   - android-wait-for-emulator
