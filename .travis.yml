@@ -6,7 +6,7 @@
 
 sudo: required
 language: android
-jdk: oraclejdk17
+jdk: oraclejdk11
 dist: trusty
 
 android:
@@ -49,7 +49,7 @@ before_install:
 
 
 before_script:
-  - npm install
+  # - npm install
   - chmod +x ./android/gradlew
 #   - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
 #   - emulator -avd test -no-audio -no-window &
