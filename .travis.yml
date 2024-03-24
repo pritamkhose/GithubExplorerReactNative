@@ -6,7 +6,7 @@
 
 sudo: required
 language: android
-jdk: oraclejdk11
+jdk: oraclejdk17
 dist: trusty
 
 android:
@@ -24,15 +24,15 @@ android:
 
 env:
   global:
-    - TARGET_VERSION=30
-    - ANDROID_BUILD_TOOLS_VERSION=30.0.2
+    - TARGET_VERSION=34
+    - ANDROID_BUILD_TOOLS_VERSION=34.0.0
     - ANDROID_HOME=~/android-sdk
  
 install:
   - yarn install
 
 before_install:
-  - nvm install 16
+  - nvm install 18
   - node --version
   - npm --version
   # - travis_retry curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
