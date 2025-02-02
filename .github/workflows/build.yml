@@ -29,7 +29,7 @@ jobs:
       run: |
         npm run lintreport
     - name: Upload Artifact lint report
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: eslintreport.html
         path: eslintreport.html
@@ -40,13 +40,13 @@ jobs:
       run: |
         npm run test
     - name: Upload Artifact coverage
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: coverage.zip
         path: coverage/
         retention-days: 1
     - name: Upload Artifact test result
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: test-result.zip
         path: test-result/
@@ -56,7 +56,7 @@ jobs:
       run: |
           cd android && bash ./gradlew assembleRelease --stacktrace
     - name: Upload Artifact release apk
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: app-release.apk
         path: android/app/build/outputs/apk/release/app-release.apk
