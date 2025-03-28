@@ -1,12 +1,23 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
-import AppContext from './AppContext';
+import { render, act } from '@testing-library/react-native';
+import { AppProvider, AppContext } from './AppContext';
+import { describe, it, expect } from '@jest/globals';
 
-test('renders correctly', () => {
-  const props = {};
-  // const tree = renderer.create(<AppContext {...props} />).toJSON();
-  // console.log(tree);
-  // expect(tree).toMatchSnapshot();
-  expect(props).toBe(props);
+describe('AppContext', () => {
+    it('should provide default context values', () => {
+        let contextValue;
+        render(
+            <AppProvider>
+                <AppContext.Consumer>
+                    {value => {
+                        contextValue = value;
+                        return null;
+                    }}
+                </AppContext.Consumer>
+            </AppProvider>
+        );
+
+        expect(contextValue).toEqual(['', expect.any(Function)]);
+    });
 
 });
