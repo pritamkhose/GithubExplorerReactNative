@@ -174,6 +174,11 @@ Libraries used
 * [Android Image Asset Studio](https://developer.android.com/studio/write/image-asset-studio)
 * [React navigation Stack Navigator](https://reactnavigation.org/docs/stack-navigator/)
 
+Debugging React Native
+--------------
+* [Debugging React Native with VS Code](https://blog.logrocket.com/debugging-react-native-vs-code/)
+* [React Native Debugging: From JS to Native](https://www.youtube.com/watch?v=FXn1vUGCci8&t=303s)
+
 Eslint
 --------------
 * [prettier-eslint](https://blog.logrocket.com/using-prettier-eslint-automate-formatting-fixing-javascript/)
