@@ -16,6 +16,16 @@ class AppDelegate: RCTAppDelegate {
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
+//  // Add this method to handle deep links
+//   func application(_ application: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+//     return RCTLinkingManager.application(application, open: url, options: options)
+//   }
+
+//   // Add this method to handle Universal Links
+//   func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+//     return RCTLinkingManager.application(application, continue: userActivity, restorationHandler: restorationHandler)
+//   }
+
   override func sourceURL(for bridge: RCTBridge) -> URL? {
     self.bundleURL()
   }

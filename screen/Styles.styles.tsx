@@ -29,6 +29,10 @@ const Styles = StyleSheet.create({
     height: 50,
     marginTop: -5,
   },
+  iconImgInfo: {
+    width: 40,
+    height: 40,
+  },
   iconImg: {
     width: 50,
     height: 50,

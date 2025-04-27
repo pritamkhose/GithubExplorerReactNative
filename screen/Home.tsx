@@ -117,6 +117,12 @@ export class Home extends React.Component<Props, State> {
                 source={require('../assets/images/search80.png')}
               />
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => {this.props.navigation.navigate(Constants.NAVIGATE_SCREEN.WebScreen)}}>
+              <Image
+                style={styles.iconImgInfo}
+                source={require('../assets/images/info80.png')}
+              />
+            </TouchableOpacity>
           </View>
           <View style={styles.center}>
             {this.state.isLoading ? (

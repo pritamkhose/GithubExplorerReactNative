@@ -192,6 +192,18 @@ Axios references
 * [Timeout](https://stackoverflow.com/questions/36690451/timeout-feature-in-the-axios-library-is-not-working)
 * [Handling errors](https://stackoverflow.com/questions/49967779/axios-handling-errors)
 
+Deeplink in app for [web](https://pritamkhose.github.io/GithubExplorerReactNativeWeb/)
+--------------
+* [Implementing Deeplink](https://medium.com/@mr.kashif.samman/implementing-deep-linking-in-a-react-native-application-7deb5c2f7937)
+```sh
+npx uri-scheme add peoplesapp --ios
+npx uri-scheme add peoplesapp --android
+
+npx npx uri-scheme open "githubexplorerreactnative://RepositoriesScreen?username=pritamkhose" --android
+npx uri-scheme open "githubexplorerreactnative://UserDetails?username=pritamkhose&avatar_url=https://avatars.githubusercontent.com/u/13750893?v=4" --ios
+* [Deep Linking in React Native ](https://reactnavigation.org/docs/deep-linking/)```
+* [Universal Links (App Links) in React Native for iOS & Android](https://medium.com/smallworldus/universal-links-app-links-in-react-native-for-ios-android-c4093cb3a71e)
+* [React Native WebView](https://blog.logrocket.com/react-native-webview-complete-guide/)
 
 Install yarn dependencies
 --------------

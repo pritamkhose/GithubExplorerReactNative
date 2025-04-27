@@ -8,6 +8,7 @@ const Constants = {
     Following: 'FollowingScreen',
     Repositories: 'RepositoriesScreen',
     PublicGist: 'PublicGistScreen',
+    WebScreen: 'WebScreen',
   },
   TEXT: {
     Home: 'Github Explorer',
@@ -16,6 +17,7 @@ const Constants = {
     Following: ' Following',
     Repositories: ' Repositories',
     PublicGist: ' Public Gist',
+    WebScreen: ' Web',
   },
   NothingFound: 'Nothing Found!',
   WentWrong: 'Something is wrong with the server!',
