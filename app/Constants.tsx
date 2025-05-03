@@ -1,6 +1,5 @@
 const Constants = {
   APP_COLOR: '#2196F3',
-  APP_NAME: 'Github Explorer React Native',
   NAVIGATE_SCREEN: {
     Home: 'Home',
     UserDetails: 'UserDetails',
@@ -10,17 +9,6 @@ const Constants = {
     PublicGist: 'PublicGistScreen',
     WebScreen: 'WebScreen',
   },
-  TEXT: {
-    Home: 'Github Explorer',
-    UserDetails: ' Details',
-    Follower: ' Follower',
-    Following: ' Following',
-    Repositories: ' Repositories',
-    PublicGist: ' Public Gist',
-    WebScreen: ' Web',
-  },
-  NothingFound: 'Nothing Found!',
-  WentWrong: 'Something is wrong with the server!',
 };
 
 export default Constants;

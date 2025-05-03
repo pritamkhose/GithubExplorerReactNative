@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Image,
   Linking,
@@ -15,6 +16,7 @@ import {Props, RepoItem} from '../model/models';
 import styles from './Styles.styles';
 
 const Repositories = ({route}: Props) => {
+  const { t } = useTranslation();
   const [isLoading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
   const [username, setUsername] = useState('');
@@ -33,12 +35,12 @@ const Repositories = ({route}: Props) => {
           setErrorMsg('');
           setList(response);
         } else {
-          setErrorMsg(Constants.NothingFound);
+          setErrorMsg(t('nothingFound'));
         }
       })
       .catch(() => {
         setLoading(false);
-        setErrorMsg(Constants.WentWrong);
+        setErrorMsg(t('wentWrong'));
       });
   }
 

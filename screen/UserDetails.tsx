@@ -1,6 +1,7 @@
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import React, {useContext, useEffect, useState} from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Image,
   Linking,
@@ -20,6 +21,7 @@ import styles from './UserDetails.styles';
 
 const UserDetails = ({route}: Props) => {
   const navigation = useNavigation();
+  const { t } = useTranslation();
   const [searchUser, setSearchUser] = useContext(AppContext);
 
   const [isLoading, setLoading] = useState(true);
@@ -46,12 +48,12 @@ const UserDetails = ({route}: Props) => {
           setErrorMsg('');
           setObj(response);
         } else {
-          setErrorMsg(Constants.NothingFound);
+          setErrorMsg(t('nothingFound'));
         }
       })
       .catch(() => {
         setLoading(false);
-        setErrorMsg(Constants.WentWrong);
+        setErrorMsg(t('wentWrong'));
       });
   }
 
@@ -106,7 +108,7 @@ const UserDetails = ({route}: Props) => {
                               'mailto:' +
                                 aObj.email +
                                 '?subject=' +
-                                Constants.APP_NAME +
+                                t('appName') +
                                 '&body=' +
                                 `Hi ${username},\n\nThanks & Regards,\n\n`,
                             )
@@ -164,7 +166,7 @@ const UserDetails = ({route}: Props) => {
                         style={styles.iconSize}
                         source={require('../assets/images/adduser80.png')}
                       />
-                      <Text>{Constants.TEXT.Follower}</Text>
+                      <Text>{t('Follower')}</Text>
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -177,7 +179,7 @@ const UserDetails = ({route}: Props) => {
                         style={styles.iconSize}
                         source={require('../assets/images/checkeduser80.png')}
                       />
-                      <Text>{Constants.TEXT.Following}</Text>
+                      <Text>{t('Following')}</Text>
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -192,7 +194,7 @@ const UserDetails = ({route}: Props) => {
                         style={styles.iconSize}
                         source={require('../assets/images/code80.png')}
                       />
-                      <Text>{Constants.TEXT.PublicGist}</Text>
+                      <Text>{t('PublicGist')}</Text>
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -205,7 +207,7 @@ const UserDetails = ({route}: Props) => {
                         style={styles.iconSize}
                         source={require('../assets/images/repository80.png')}
                       />
-                      <Text>{Constants.TEXT.Repositories}</Text>
+                      <Text>{t('Repositories')}</Text>
                     </View>
                   </TouchableOpacity>
                 </View>

@@ -1,0 +1,23 @@
+{
+    "appName": "Github Explorer React Native",
+    "english": "English",
+    "spanish": "Española",
+    "hindi": "हिंदी",
+    "marathi": "मराठी",
+    "home": "Github Explorer",
+    "UserDetails": "Details",
+    "Follower": "Follower",
+    "Following": "Following",
+    "Repositories": "Repositories",
+    "PublicGist": "Public Gist",
+    "WebScreen": "Web",
+    "inputSearch": "Enter text for search user",
+    "inputSearchValid": "Enter valid input for search",
+    "nothingFound": "Nothing Found!",
+    "selectLang": "Select Language",
+    "wentWrong": "Something went with the server!",
+    "loading": "Loading",
+    "OK": "OK",
+    "cancel": "Cancel",
+    "wantExit": "Do you want to exit?"
+}

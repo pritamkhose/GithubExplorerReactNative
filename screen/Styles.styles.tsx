@@ -33,6 +33,11 @@ const Styles = StyleSheet.create({
     width: 40,
     height: 40,
   },
+  iconImgLang: {
+    width: 40,
+    height: 40,
+    marginStart: 4,
+  },
   iconImg: {
     width: 50,
     height: 50,

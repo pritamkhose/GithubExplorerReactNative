@@ -1,5 +1,6 @@
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Linking,
   RefreshControl,
@@ -15,6 +16,7 @@ import {GistItem, Props} from '../model/models';
 import styles from './Styles.styles';
 
 const PublicGist = ({route}: Props) => {
+  const { t } = useTranslation();
   const [isLoading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
   const [username, setUsername] = useState('');
@@ -33,12 +35,12 @@ const PublicGist = ({route}: Props) => {
           setErrorMsg('');
           setList(response);
         } else {
-          setErrorMsg(Constants.NothingFound);
+          setErrorMsg(t('nothingFound'));
         }
       })
       .catch(() => {
         setLoading(false);
-        setErrorMsg(Constants.WentWrong);
+        setErrorMsg(t('wentWrong'));
       });
   }
 

@@ -1,6 +1,9 @@
-import React from 'react';
+import { CommonActions, useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Alert,
+  BackHandler,
   Image,
   Keyboard,
   RefreshControl,
@@ -13,6 +16,7 @@ import {
 import Services from '../api/Services';
 import Constants from '../app/Constants';
 import FastImageLoad from '../components/FastImageLoad';
+import LangPopup from '../components/LangPopup';
 import Loading from '../components/Loading';
 import styles from './Styles.styles';
 
@@ -32,152 +36,161 @@ export interface UserItem {
   avatar_url: string;
 }
 
-export class Home extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      serachTxt: 'android',
-      isLoading: true,
-      errorMsg: '',
-      aList: [],
-    };
-  }
+const Home = () => {
+  const navigation = useNavigation();
+  const { t } = useTranslation();
+  const [state, setState] = useState({
+    serachTxt: 'android',
+    isLoading: true,
+    errorMsg: '',
+    aList: [],
+  });
+  const [isLangPopup, setLangPopup] = useState(false);
 
-  componentDidMount() {
-    this.getData();
-  }
+  useEffect(() => {
+    getData();
+  }, [navigation, t]);
 
-  getSearch() {
+  const getSearch = () => {
     // Hide that keyboard!
     Keyboard.dismiss();
-    console.log('get ' + this.state.serachTxt);
-    if (this.state.serachTxt.length === 0) {
-      this.showAlert('Enter valid input for search');
+    if (state.serachTxt.length === 0) {
+      showAlert(t('inputSearchValid'));
     } else {
-      this.getData();
+      getData();
     }
-  }
+  };
 
-  getData() {
-    Services.getUserSearch(this.state.serachTxt, 1)
+  const getData = () => {
+    Services.getUserSearch(state.serachTxt, 1)
       .then((response: any) => {
         if (response && response.total_count !== 0) {
-          this.setState({
+          setState({
+            ...state,
             isLoading: false,
             aList: response.items,
           });
-        } else {
-          this.setState({
+          setState({
+            ...state,
             isLoading: false,
             aList: [],
-            errorMsg: 'Nothing Found',
+            errorMsg: t('nothingFound'),
           });
         }
-      })
-      .catch(() => {
-        this.setState({
+        setState({
+          ...state,
           isLoading: false,
           aList: [],
-          errorMsg: Constants.WentWrong,
+          errorMsg: t('nothingFound'),
         });
       });
-  }
+  };
 
-  showAlert(msg: string) {
+  const showAlert = (msg: string) => {
     Alert.alert(
       '',
       msg,
       [
         {
-          text: 'Cancel',
+          text: t('cancel'),
           onPress: () => '',
           style: 'cancel',
         },
       ],
-      {cancelable: false},
+      { cancelable: false },
     );
-  }
+  };
 
-  render() {
-    return (
-      <>
-        {/* <StatusBar barStyle="dark-content" backgroundColor="#1970B6" /> */}
-        <View style={styles.container}>
-          <View style={styles.searchrow}>
-            <TextInput
-              style={styles.textInput}
-              placeholder="Enter text for search user"
-              underlineColorAndroid="transparent"
-              onChangeText={text => this.setState({serachTxt: text})}
-              onSubmitEditing={this.SubmitEdit}
+  const openDetails = (txt: string, avatar_url: string) => {
+    console.log('openDetails -->', txt);
+    navigation.dispatch(
+      CommonActions.navigate({
+        name: Constants.NAVIGATE_SCREEN.UserDetails,
+        params: {
+          username: txt,
+          avatar_url: avatar_url,
+        },
+      }),
+    );
+  };
+
+  return (
+    <>
+      {/* <StatusBar barStyle="dark-content" backgroundColor="#1970B6" /> */}
+      <View style={styles.container}>
+        <View style={styles.searchrow}>
+          <TextInput
+            style={styles.textInput}
+            placeholder={t('inputSearch')}
+            underlineColorAndroid="transparent"
+            onChangeText={text => setState({ ...state, serachTxt: text })}
+            onSubmitEditing={getData}
+          />
+          <TouchableOpacity onPress={() => getSearch()}>
+            <Image
+              style={styles.iconSearchImg}
+              source={require('../assets/images/search80.png')}
             />
-            <TouchableOpacity onPress={() => this.getSearch()}>
-              <Image
-                style={styles.iconSearchImg}
-                source={require('../assets/images/search80.png')}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => {this.props.navigation.navigate(Constants.NAVIGATE_SCREEN.WebScreen)}}>
-              <Image
-                style={styles.iconImgInfo}
-                source={require('../assets/images/info80.png')}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.center}>
-            {this.state.isLoading ? (
-              <Loading />
-            ) : this.state.aList && this.state.aList.length > 0 ? (
-              <ScrollView
-                showsVerticalScrollIndicator={false}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={this.state.isLoading}
-                    onRefresh={this._onRefresh}
-                  />
-                }
-              >
-                {this.state.aList.map((item: UserItem, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() =>
-                      this.openDetails(item.login, item.avatar_url)
-                    }
-                  >
-                    <View style={styles.carditem}>
-                      <FastImageLoad
-                        style={styles.iconImg}
-                        uri={item.avatar_url}
-                      />
-                      <Text style={styles.login}>{item.login}</Text>
-                    </View>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            ) : (
-              <Text>{this.state.errorMsg}</Text>
-            )}
-          </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+            navigation.dispatch(
+              CommonActions.navigate({
+                name: Constants.NAVIGATE_SCREEN.WebScreen,
+              }),
+            );
+          }}>
+            <Image
+              style={styles.iconImgInfo}
+              source={require('../assets/images/info80.png')}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+            setLangPopup(!isLangPopup);
+          }}>
+            <Image
+              style={styles.iconImgLang}
+              source={require('../assets/images/globe.png')}
+            />
+          </TouchableOpacity>
         </View>
-      </>
-    );
-  }
-
-  SubmitEdit = () => {
-    this.getData();
-  };
-
-  openDetails(txt: string, avatar_url: string) {
-    console.log(txt);
-    this.props.navigation.navigate(Constants.NAVIGATE_SCREEN.UserDetails, {
-      username: txt,
-      avatar_url: avatar_url,
-    });
-  }
-
-  _onRefresh = () => {
-    this.getData();
-  };
-}
+        <View style={styles.center}>
+          {state.isLoading ? (
+            <Loading />
+          ) : state.aList && state.aList.length > 0 ? (
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              refreshControl={
+                <RefreshControl
+                  refreshing={state.isLoading}
+                  onRefresh={getData}
+                />
+              }
+            >
+              {state.aList.map((item: UserItem, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() =>
+                    openDetails(item.login, item.avatar_url)
+                  }
+                >
+                  <View style={styles.carditem}>
+                    <FastImageLoad
+                      style={styles.iconImg}
+                      uri={item.avatar_url}
+                    />
+                    <Text style={styles.login}>{item.login}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          ) : (
+            <Text>{state.errorMsg}</Text>
+          )}
+        </View>
+        {isLangPopup && <LangPopup onClose={() => setLangPopup(false)} />}
+      </View>
+    </>
+  );
+};
 
 export default Home;

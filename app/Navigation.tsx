@@ -1,6 +1,7 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import React, {useContext, useEffect} from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Alert,
   BackHandler,
@@ -24,6 +25,7 @@ import Constants from './Constants';
 const Stack = createStackNavigator();
 
 const Navigation = () => {
+  const { t } = useTranslation();
   const [searchUser] = useContext(AppContext);
 
   useEffect(() => {
@@ -58,13 +60,13 @@ const Navigation = () => {
               {Platform.OS === 'android' ? (
                 <TouchableOpacity
                   onPress={() => {
-                    Alert.alert('', 'Do you want to exit?', [
+                    Alert.alert('', t('wantExit'), [
                       {
-                        text: 'Cancel',
+                        text: t('cancel'),
                         onPress: () => console.log('Cancel Pressed'),
                         style: 'cancel',
                       },
-                      { text: 'OK', onPress: () => doExit() },
+                      { text: t('OK'), onPress: () => doExit() },
                     ]);
                   }}
                 >
@@ -82,49 +84,49 @@ const Navigation = () => {
           name={Constants.NAVIGATE_SCREEN.Home}
           component={HomeScreen}
           options={{
-            title: Constants.TEXT.Home,
+            title: t('home'),
           }}
         />
         <Stack.Screen
           name={Constants.NAVIGATE_SCREEN.UserDetails}
           component={UserDetails}
           options={{
-            title: searchUser.toUpperCase() + Constants.TEXT.UserDetails,
+            title: `${searchUser.toUpperCase()} ${t('UserDetails')}`,
           }}
         />
         <Stack.Screen
           name={Constants.NAVIGATE_SCREEN.Repositories}
           component={RepositoriesScreen}
           options={{
-            title: searchUser.toUpperCase() + Constants.TEXT.Repositories,
+            title: `${searchUser.toUpperCase()} ${t('Repositories')}`,
           }}
         />
         <Stack.Screen
           name={Constants.NAVIGATE_SCREEN.PublicGist}
           component={PublicGistScreen}
           options={{
-            title: searchUser.toUpperCase() + Constants.TEXT.PublicGist,
+            title: `${searchUser.toUpperCase()} ${t('PublicGist')}`,
           }}
         />
         <Stack.Screen
           name={Constants.NAVIGATE_SCREEN.Follower}
           component={FollowerScreen}
           options={{
-            title: searchUser.toUpperCase() + Constants.TEXT.Follower,
+            title: `${searchUser.toUpperCase()} ${t('Follower')}`,
           }}
         />
         <Stack.Screen
           name={Constants.NAVIGATE_SCREEN.Following}
           component={FollowingScreen}
           options={{
-            title: searchUser.toUpperCase() + Constants.TEXT.Following,
+            title: `${searchUser.toUpperCase()} ${t('Following')}`,
           }}
         />
         <Stack.Screen
           name={Constants.NAVIGATE_SCREEN.WebScreen}
           component={WebScreen}
           options={{
-            title: Constants.TEXT.WebScreen,
+            title: `${searchUser.toUpperCase()} ${t('WebScreen')}`,
           }}
         />
       </Stack.Navigator>

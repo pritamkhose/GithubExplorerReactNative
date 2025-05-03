@@ -1,0 +1,23 @@
+{
+    "appName": "गिटहब रिएक्ट नेटिव एक्सप्लोरर",
+    "english": "English",
+    "spanish": "Española",
+    "hindi": "हिंदी",
+    "marathi": "मराठी",
+    "home": "गिटहब एक्सप्लोरर",
+    "UserDetails": "विवरण",
+    "Follower": "अनुयायी",
+    "Following": "अनुसरण कर रहे हैं",
+    "Repositories": "भंडार",
+    "PublicGist": "सार्वजनिक गिस्ट",
+    "WebScreen": "वेब",
+    "inputSearch": "उपयोगकर्ता खोजने के लिए पाठ दर्ज करें",
+    "inputSearchValid": "खोजने के लिए एक मान्य इनपुट दर्ज करें",
+    "nothingFound": "कुछ नहीं मिला!",
+    "selectLang": "भाषा चुने",
+    "wentWrong": "सर्वर के साथ कुछ गलत हो गया!",
+    "Loading": "लोड हो रहा है",
+    "OK": "ठीक है",
+    "cancel": "रद्द करें",
+    "wantExit": "क्या आप बाहर निकलना चाहते हैं?"
+}

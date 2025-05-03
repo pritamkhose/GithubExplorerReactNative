@@ -1,5 +1,6 @@
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import React, {useContext, useEffect, useState} from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   RefreshControl,
   ScrollView,
@@ -17,6 +18,7 @@ import styles from './Styles.styles';
 
 const Following = ({route}: Props) => {
   const navigation = useNavigation();
+  const { t } = useTranslation();
   const [searchUser, setSearchUser] = useContext(AppContext);
 
   const [isLoading, setLoading] = useState(true);
@@ -35,12 +37,12 @@ const Following = ({route}: Props) => {
           setErrorMsg('');
           setList(response);
         } else {
-          setErrorMsg(Constants.NothingFound);
+          setErrorMsg(t('nothingFound'));
         }
       })
       .catch(() => {
         setLoading(false);
-        setErrorMsg(Constants.WentWrong);
+        setErrorMsg(t('wentWrong'));
       });
   }
 

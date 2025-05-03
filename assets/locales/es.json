@@ -1,0 +1,23 @@
+{
+    "appName": "Explorador de Github React Native",
+    "english": "English",
+    "spanish": "Española",
+    "hindi": "हिंदी",
+    "marathi": "मराठी",
+    "home": "Explorador de Github",
+    "UserDetails": "Detalles",
+    "Follower": "Seguidor",
+    "Following": "Siguiendo",
+    "Repositories": "Repositorios",
+    "PublicGist": "Gist Público",
+    "WebScreen": "Web",
+    "inputSearch": "Ingrese texto para buscar usuario",
+    "inputSearchValid": "Ingrese una entrada válida para buscar",
+    "nothingFound": "¡Nada encontrado!",
+    "selectLang": "Seleccionar idioma",
+    "wentWrong": "¡Algo salió mal con el servidor!",
+    "Loading": "Cargando",
+    "OK": "Aceptar",
+    "cancel": "Cancelar",
+    "wantExit": "¿Quieres salir?"
+}

@@ -173,6 +173,7 @@ Libraries used
 * [Colors](https://reactnative.dev/docs/colors)
 * [Android Image Asset Studio](https://developer.android.com/studio/write/image-asset-studio)
 * [React navigation Stack Navigator](https://reactnavigation.org/docs/stack-navigator/)
+* [Localization](https://medium.com/@prathiba2796/internationalization-and-localization-in-react-native-d37c412f42f9) yarn add i18next react-i18next react-native-localize
 
 Debugging React Native
 --------------

@@ -1,13 +1,18 @@
 import React from 'react';
-import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import Constant from '../app/Constants';
 
-const Loading = () => (
-  <View style={styles.container}>
-    <ActivityIndicator size="large" color={Constant.APP_COLOR} />
-    <Text style={styles.centerText}>Loading ...</Text>
-  </View>
-);
+const Loading = () => {
+  const { t } = useTranslation();
+
+  return (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" color={Constant.APP_COLOR} />
+      <Text style={styles.centerText}>{t('loading')} ...</Text>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
