@@ -5,12 +5,13 @@ name: "Build iOS app"
 # https://docs.github.com/en/actions/deployment/deploying-xcode-applications/installing-an-apple-certificate-on-macos-runners-for-xcode-development
 # manual trigger but change to any supported event
 # see addl: https://www.andrewhoog.com/post/how-to-build-react-native-android-app-with-github-actions/#3-run-build-workflow addl comment
+# >>>>>>> Disable Script as no iOS Config <<<<<<<<
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main-ios ]
   pull_request:
-    branches: [ main ]
+    branches: [ main-ios ]
     types: [opened, synchronize, reopened]
 
 jobs:

@@ -105,5 +105,10 @@
     "coverageLink": "../coverage/lcov-report/index.html",
     "hidePassing": true,
     "hidePending": true
+  },
+  "overrides": {
+    "react-native-fast-image": {
+      "react": "$react"
+    }
   }
 }
