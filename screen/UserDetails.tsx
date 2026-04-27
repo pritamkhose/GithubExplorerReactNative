@@ -1,7 +1,7 @@
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import React, {useContext, useEffect, useState} from 'react';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import {
   Image,
   Linking,
@@ -21,7 +21,7 @@ import styles from './UserDetails.styles';
 
 const UserDetails = ({route}: Props) => {
   const navigation = useNavigation();
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const [searchUser, setSearchUser] = useContext(AppContext);
 
   const [isLoading, setLoading] = useState(true);
@@ -75,8 +75,7 @@ const UserDetails = ({route}: Props) => {
                   refreshing={isLoading}
                   onRefresh={() => getData(username, avatar_url)}
                 />
-              }
-            >
+              }>
               <>
                 <View style={styles.carditem}>
                   <View style={styles.flexDirectionRow}>
@@ -86,8 +85,7 @@ const UserDetails = ({route}: Props) => {
                         aObj?.name == null
                           ? styles.cardDataMinHight
                           : styles.cardData,
-                      ]}
-                    >
+                      ]}>
                       <Text style={styles.textblue}>{aObj?.name}</Text>
                       <View style={styles.flexDirectionRow}>
                         <Text style={styles.textblack}>{aObj?.bio}</Text>
@@ -112,8 +110,7 @@ const UserDetails = ({route}: Props) => {
                                 '&body=' +
                                 `Hi ${username},\n\nThanks & Regards,\n\n`,
                             )
-                          }
-                        >
+                          }>
                           <Text style={styles.textblack}>{aObj.email}</Text>
                         </TouchableOpacity>
                       </View>
@@ -127,8 +124,7 @@ const UserDetails = ({route}: Props) => {
                           source={require('../assets/images/info80.png')}
                         />
                         <TouchableOpacity
-                          onPress={() => Linking.openURL(aObj.blog)}
-                        >
+                          onPress={() => Linking.openURL(aObj.blog)}>
                           <Text style={styles.textblack}>{aObj.blog}</Text>
                         </TouchableOpacity>
                       </View>
@@ -158,8 +154,7 @@ const UserDetails = ({route}: Props) => {
                 <View style={styles.flexDirectionRow}>
                   <TouchableOpacity
                     onPress={() => openDetails('f', aObj?.followers)}
-                    style={styles.carditem}
-                  >
+                    style={styles.carditem}>
                     <Text style={styles.textCount}>{aObj?.followers}</Text>
                     <View style={styles.imgtxt}>
                       <Image
@@ -171,8 +166,7 @@ const UserDetails = ({route}: Props) => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => openDetails('o', aObj?.following)}
-                    style={styles.carditem}
-                  >
+                    style={styles.carditem}>
                     <Text style={styles.textCount}>{aObj?.following}</Text>
                     <View style={styles.imgtxt}>
                       <Image
@@ -186,8 +180,7 @@ const UserDetails = ({route}: Props) => {
                 <View style={styles.flexDirectionRow}>
                   <TouchableOpacity
                     onPress={() => openDetails('g', aObj?.public_gists)}
-                    style={styles.carditem}
-                  >
+                    style={styles.carditem}>
                     <Text style={styles.textCount}>{aObj?.public_gists}</Text>
                     <View style={styles.imgtxt}>
                       <Image
@@ -199,8 +192,7 @@ const UserDetails = ({route}: Props) => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => openDetails('r', aObj?.public_repos)}
-                    style={styles.carditem}
-                  >
+                    style={styles.carditem}>
                     <Text style={styles.textCount}>{aObj?.public_repos}</Text>
                     <View style={styles.imgtxt}>
                       <Image

@@ -1,9 +1,8 @@
-import { CommonActions, useNavigation } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import {CommonActions, useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {
   Alert,
-  BackHandler,
   Image,
   Keyboard,
   RefreshControl,
@@ -38,7 +37,7 @@ export interface UserItem {
 
 const Home = () => {
   const navigation = useNavigation();
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const [state, setState] = useState({
     serachTxt: 'android',
     isLoading: true,
@@ -62,28 +61,23 @@ const Home = () => {
   };
 
   const getData = () => {
-    Services.getUserSearch(state.serachTxt, 1)
-      .then((response: any) => {
-        if (response && response.total_count !== 0) {
-          setState({
-            ...state,
-            isLoading: false,
-            aList: response.items,
-          });
-          setState({
-            ...state,
-            isLoading: false,
-            aList: [],
-            errorMsg: t('nothingFound'),
-          });
-        }
+    Services.getUserSearch(state.serachTxt, 1).then((response: any) => {
+      if (response && response.total_count !== 0) {
+        setState({
+          ...state,
+          isLoading: false,
+          aList: response.items,
+          errorMsg: '',
+        });
+      } else {
         setState({
           ...state,
           isLoading: false,
           aList: [],
           errorMsg: t('nothingFound'),
         });
-      });
+      }
+    });
   };
 
   const showAlert = (msg: string) => {
@@ -97,7 +91,7 @@ const Home = () => {
           style: 'cancel',
         },
       ],
-      { cancelable: false },
+      {cancelable: false},
     );
   };
 
@@ -123,7 +117,7 @@ const Home = () => {
             style={styles.textInput}
             placeholder={t('inputSearch')}
             underlineColorAndroid="transparent"
-            onChangeText={text => setState({ ...state, serachTxt: text })}
+            onChangeText={text => setState({...state, serachTxt: text})}
             onSubmitEditing={getData}
           />
           <TouchableOpacity onPress={() => getSearch()}>
@@ -132,21 +126,23 @@ const Home = () => {
               source={require('../assets/images/search80.png')}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {
-            navigation.dispatch(
-              CommonActions.navigate({
-                name: Constants.NAVIGATE_SCREEN.WebScreen,
-              }),
-            );
-          }}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.dispatch(
+                CommonActions.navigate({
+                  name: Constants.NAVIGATE_SCREEN.WebScreen,
+                }),
+              );
+            }}>
             <Image
               style={styles.iconImgInfo}
               source={require('../assets/images/info80.png')}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {
-            setLangPopup(!isLangPopup);
-          }}>
+          <TouchableOpacity
+            onPress={() => {
+              setLangPopup(!isLangPopup);
+            }}>
             <Image
               style={styles.iconImgLang}
               source={require('../assets/images/globe.png')}
@@ -164,15 +160,11 @@ const Home = () => {
                   refreshing={state.isLoading}
                   onRefresh={getData}
                 />
-              }
-            >
+              }>
               {state.aList.map((item: UserItem, index) => (
                 <TouchableOpacity
                   key={index}
-                  onPress={() =>
-                    openDetails(item.login, item.avatar_url)
-                  }
-                >
+                  onPress={() => openDetails(item.login, item.avatar_url)}>
                   <View style={styles.carditem}>
                     <FastImageLoad
                       style={styles.iconImg}

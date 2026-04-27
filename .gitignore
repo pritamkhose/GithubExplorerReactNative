@@ -75,3 +75,5 @@ __snapshots__
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+eslintreport.*

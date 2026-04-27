@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import {
   Image,
   Linking,
@@ -16,7 +16,7 @@ import {Props, RepoItem} from '../model/models';
 import styles from './Styles.styles';
 
 const Repositories = ({route}: Props) => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const [isLoading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
   const [username, setUsername] = useState('');
@@ -58,13 +58,11 @@ const Repositories = ({route}: Props) => {
               refreshing={isLoading}
               onRefresh={() => getData(username)}
             />
-          }
-        >
+          }>
           {aList.map((item: RepoItem, index: number) => (
             <TouchableOpacity
               key={index}
-              onPress={() => Linking.openURL(item.html_url)}
-            >
+              onPress={() => Linking.openURL(item.html_url)}>
               <View style={styles.cardItemRepo}>
                 <Text style={styles.textTitle}>{item.name}</Text>
                 {item.description && item.description.length > 1 ? (

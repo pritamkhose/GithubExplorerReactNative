@@ -1,10 +1,10 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import {useTranslation} from 'react-i18next';
+import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import Constant from '../app/Constants';
 
 const Loading = () => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
 
   return (
     <View style={styles.container}>

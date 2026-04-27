@@ -5,7 +5,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import {RefreshControl, TouchableOpacity, ScrollView} from 'react-native';
-import Follower from '../screen/Follower';
+import Following from '../screen/Following';
 import Services from '../api/Services';
 import {AppContext} from '../app/AppContext';
 
@@ -26,7 +26,7 @@ jest.mock('react-i18next', () => ({
 }));
 
 jest.mock('../api/Services', () => ({
-  getUserFollowers: jest.fn(),
+  getUserFollowing: jest.fn(),
 }));
 
 jest.mock('../components/Loading', () => 'Loading');
@@ -39,7 +39,7 @@ jest.mock('../app/AppContext', () => {
   };
 });
 
-describe('Follower', () => {
+describe('Following', () => {
   const mockSetSearchUser = jest.fn();
 
   beforeEach(() => {
@@ -50,13 +50,13 @@ describe('Follower', () => {
     const route = {params: {user: 'testuser'}};
     return renderer.create(
       <AppContext.Provider value={['testuser', mockSetSearchUser]}>
-        <Follower navigation={{} as any} route={route as any} />
+        <Following navigation={{} as any} route={route as any} />
       </AppContext.Provider>,
     );
   };
 
   test('renders loading state initially', async () => {
-    (Services.getUserFollowers as jest.Mock).mockResolvedValueOnce([]);
+    (Services.getUserFollowing as jest.Mock).mockResolvedValueOnce([]);
     let tree: any;
     await renderer.act(async () => {
       tree = renderComponent();
@@ -64,23 +64,25 @@ describe('Follower', () => {
     expect(tree.toJSON()).toBeDefined();
   });
 
-  test('renders list of followers correctly', async () => {
+  test('renders list of following correctly', async () => {
     const mockData = [
       {login: 'user1', avatar_url: 'https://example.com/user1.png'},
+      {login: 'user2', avatar_url: 'https://example.com/user2.png'},
     ];
-    (Services.getUserFollowers as jest.Mock).mockResolvedValueOnce(mockData);
+    (Services.getUserFollowing as jest.Mock).mockResolvedValueOnce(mockData);
 
     let component: any;
     await renderer.act(async () => {
       component = renderComponent();
     });
 
-    const touchables = component.root.findAllByType(TouchableOpacity);
-    expect(touchables.length).toBe(1);
+    const root = component.root;
+    const touchables = root.findAllByType(TouchableOpacity);
+    expect(touchables.length).toBe(2);
   });
 
   test('handles API failure correctly', async () => {
-    (Services.getUserFollowers as jest.Mock).mockRejectedValueOnce(
+    (Services.getUserFollowing as jest.Mock).mockRejectedValueOnce(
       new Error('Network error'),
     );
 
@@ -88,21 +90,36 @@ describe('Follower', () => {
     await renderer.act(async () => {
       component = renderComponent();
     });
-    expect(component.root.findByType(ScrollView)).toBeDefined();
+
+    const root = component.root;
+    expect(root.findByType(ScrollView)).toBeDefined();
   });
 
-  test('calls openDetails when user is pressed', async () => {
-    const mockData = [
-      {login: 'user1', avatar_url: 'https://example.com/user1.png'},
-    ];
-    (Services.getUserFollowers as jest.Mock).mockResolvedValueOnce(mockData);
+  test('handles empty data response correctly', async () => {
+    (Services.getUserFollowing as jest.Mock).mockResolvedValueOnce([]);
 
     let component: any;
     await renderer.act(async () => {
       component = renderComponent();
     });
 
-    const touchable = component.root.findByType(TouchableOpacity);
+    const root = component.root;
+    expect(root.findByType(ScrollView)).toBeDefined();
+  });
+
+  test('calls openDetails when user is pressed', async () => {
+    const mockData = [
+      {login: 'user1', avatar_url: 'https://example.com/user1.png'},
+    ];
+    (Services.getUserFollowing as jest.Mock).mockResolvedValueOnce(mockData);
+
+    let component: any;
+    await renderer.act(async () => {
+      component = renderComponent();
+    });
+
+    const root = component.root;
+    const touchable = root.findByType(TouchableOpacity);
 
     await renderer.act(async () => {
       touchable.props.onPress();
@@ -110,5 +127,28 @@ describe('Follower', () => {
 
     expect(mockSetSearchUser).toHaveBeenCalledWith('user1');
     expect(mockDispatch).toHaveBeenCalled();
+  });
+
+  test('handles pull to refresh', async () => {
+    const mockData = [
+      {login: 'user1', avatar_url: 'https://example.com/user1.png'},
+    ];
+    (Services.getUserFollowing as jest.Mock).mockResolvedValueOnce(mockData);
+
+    let component: any;
+    await renderer.act(async () => {
+      component = renderComponent();
+    });
+
+    const root = component.root;
+    const refreshControl = root.findByType(RefreshControl);
+
+    (Services.getUserFollowing as jest.Mock).mockResolvedValueOnce(mockData);
+
+    await renderer.act(async () => {
+      refreshControl.props.onRefresh();
+    });
+
+    expect(Services.getUserFollowing).toHaveBeenCalledTimes(2);
   });
 });

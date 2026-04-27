@@ -1,13 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {useTranslation} from 'react-i18next';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import i18n from '../app/i18n';
 import Constants from '../app/Constants';
 
@@ -15,8 +9,8 @@ type LangPopupProps = {
   onClose: () => void;
 };
 
-const LangPopup = ({ onClose }: LangPopupProps) => {
-  const { t } = useTranslation();
+const LangPopup = ({onClose}: LangPopupProps) => {
+  const {t} = useTranslation();
 
   return (
     <View style={styles.modalContainer}>
@@ -24,13 +18,13 @@ const LangPopup = ({ onClose }: LangPopupProps) => {
       <FlatList
         style={styles.list}
         data={[
-          { code: 'en', title: t('english') },
-          { code: 'es', title: t('spanish') },
-          { code: 'hi', title: t('hindi') },
-          { code: 'mr', title: t('marathi') },
+          {code: 'en', title: t('english')},
+          {code: 'es', title: t('spanish')},
+          {code: 'hi', title: t('hindi')},
+          {code: 'mr', title: t('marathi')},
         ]}
         keyExtractor={item => item.code}
-        renderItem={({ item }) => (
+        renderItem={({item}) => (
           <TouchableOpacity
             onPress={async () => {
               await AsyncStorage.setItem('currentLanguage', item.code);
@@ -84,8 +78,8 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: Constants.APP_COLOR,
   },
-  list:{
-     width: '100%',
+  list: {
+    width: '100%',
   },
 });
 

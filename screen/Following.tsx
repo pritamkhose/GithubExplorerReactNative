@@ -1,6 +1,6 @@
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import React, {useContext, useEffect, useState} from 'react';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import {
   RefreshControl,
   ScrollView,
@@ -18,7 +18,7 @@ import styles from './Styles.styles';
 
 const Following = ({route}: Props) => {
   const navigation = useNavigation();
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const [searchUser, setSearchUser] = useContext(AppContext);
 
   const [isLoading, setLoading] = useState(true);
@@ -60,13 +60,11 @@ const Following = ({route}: Props) => {
               refreshing={isLoading}
               onRefresh={() => getData(searchUser)}
             />
-          }
-        >
+          }>
           {aList.map((item: UserLoginItem, index: number) => (
             <TouchableOpacity
               key={index}
-              onPress={() => openDetails(item.login, item.avatar_url)}
-            >
+              onPress={() => openDetails(item.login, item.avatar_url)}>
               <View style={styles.carditem}>
                 <FastImageLoad style={styles.iconImg} uri={item.avatar_url} />
                 <Text style={styles.iconText}>{item.login}</Text>

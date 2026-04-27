@@ -1,7 +1,7 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import React, {useContext, useEffect} from 'react';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import {
   Alert,
   BackHandler,
@@ -19,17 +19,17 @@ import PublicGistScreen from '../screen/PublicGist';
 import RepositoriesScreen from '../screen/Repositories';
 import UserDetails from '../screen/UserDetails';
 import WebScreen from '../screen/WebviewScreen';
-import { AppContext } from './AppContext';
+import {AppContext} from './AppContext';
 import Constants from './Constants';
 
 const Stack = createStackNavigator();
 
 const Navigation = () => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const [searchUser] = useContext(AppContext);
 
   useEffect(() => {
-    const handleDeepLink = ({ url }: { url: string }) => {
+    const handleDeepLink = ({url}: {url: string}) => {
       const route = url.replace(/.*?:\/\//g, '');
       console.log('route', route, '****');
     };
@@ -41,10 +41,10 @@ const Navigation = () => {
   }, []);
 
   return (
-    <NavigationContainer 
-    linking={ {
-      prefixes: ['githubexplorerreactnative://']
-    }} >
+    <NavigationContainer
+      linking={{
+        prefixes: ['githubexplorerreactnative://'],
+      }}>
       <Stack.Navigator
         initialRouteName="Home"
         screenOptions={{
@@ -66,10 +66,9 @@ const Navigation = () => {
                         onPress: () => console.log('Cancel Pressed'),
                         style: 'cancel',
                       },
-                      { text: t('OK'), onPress: () => doExit() },
+                      {text: t('OK'), onPress: () => doExit()},
                     ]);
-                  }}
-                >
+                  }}>
                   <Image
                     style={styles.logoutIcon}
                     source={require('../assets/images/logout.png')}
@@ -78,8 +77,7 @@ const Navigation = () => {
               ) : null}
             </>
           ),
-        }}
-      >
+        }}>
         <Stack.Screen
           name={Constants.NAVIGATE_SCREEN.Home}
           component={HomeScreen}

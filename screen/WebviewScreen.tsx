@@ -1,15 +1,15 @@
 import i18n from 'i18next';
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Alert, BackHandler, Linking, StyleSheet, View } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {Alert, BackHandler, Linking, StyleSheet, View} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { WebView } from 'react-native-webview';
+import {WebView} from 'react-native-webview';
 import Loading from '../components/Loading';
 
 const WebScreen = () => {
   const uri = 'https://pritamkhose.github.io/GithubExplorerReactNativeWeb/';
   const [userAgent, setUserAgent] = useState('');
-  const { t } = useTranslation();
+  const {t} = useTranslation();
 
   useEffect(() => {
     DeviceInfo.getUserAgent().then(agent => {
@@ -30,12 +30,13 @@ const WebScreen = () => {
     <View style={styles.containerWeb}>
       <WebView
         startInLoadingState={true}
-        renderLoading={() => (
-          <Loading />
-        )}
-        source={{ uri, headers: {
-          'Accept-Language': `${i18n.language}`,
-        } }}
+        renderLoading={() => <Loading />}
+        source={{
+          uri,
+          headers: {
+            'Accept-Language': `${i18n.language}`,
+          },
+        }}
         userAgent={userAgent}
         javaScriptEnabled={true}
         domStorageEnabled={true}
@@ -49,16 +50,28 @@ const WebScreen = () => {
           }
         }}
         onHttpError={syntheticEvent => {
-          const { nativeEvent } = syntheticEvent;
-          Alert.alert(t('wentWrong'), nativeEvent.statusCode + ' - ' + nativeEvent.url + ' ' + nativeEvent.description, [
-            { text: t('cancel'), style: 'cancel' },
-          ]);
+          const {nativeEvent} = syntheticEvent;
+          Alert.alert(
+            t('wentWrong'),
+            nativeEvent.statusCode +
+              ' - ' +
+              nativeEvent.url +
+              ' ' +
+              nativeEvent.description,
+            [{text: t('cancel'), style: 'cancel'}],
+          );
         }}
         onError={syntheticEvent => {
-          const { nativeEvent } = syntheticEvent;
-          Alert.alert(t('wentWrong'), nativeEvent.code + ' - ' + nativeEvent.url + ' ' + nativeEvent.description, [
-            { text: t('cancel'), style: 'cancel' },
-          ]);
+          const {nativeEvent} = syntheticEvent;
+          Alert.alert(
+            t('wentWrong'),
+            nativeEvent.code +
+              ' - ' +
+              nativeEvent.url +
+              ' ' +
+              nativeEvent.description,
+            [{text: t('cancel'), style: 'cancel'}],
+          );
         }}
         style={styles.container}
       />
