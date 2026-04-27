@@ -17,7 +17,12 @@ or
 npx react-native init GithubExplorerReactNative
 
 yarn add @react-navigation/native @react-navigation/stack react-native-gesture-handler react-native-reanimated react-native-safe-area-context react-native-screens react-native-splash-screen
-yarn add eslint-html-reporter -D
+
+or 
+
+yarn add @react-native-async-storage/async-storage @react-native-community/netinfo @react-navigation/native @react-navigation/stack axios i18next moment react-i18next react-native-device-info react-native-fast-image react-native-gesture-handler react-native-localize react-native-modal react-native-reanimated react-native-screens react-native-splash-screen react-native-webview
+
+yarn add eslint-html-reporter @testing-library/react-native -D
 
 
 ```
